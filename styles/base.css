@@ -15,10 +15,7 @@
   --color-destroyer: #ff9800;
   --color-inversion: #e91e63;
   --color-poison: #8bc34a;
-  --color-header: rgba(100, 100, 100, 0.85);
   --color-overlay: rgba(0, 0, 0, 0.85);
-  --color-footer: rgba(100, 100, 100, 0.85);
-  --color-skin-selector: rgba(160, 160, 160, 0.8);
   --border-radius: 8px;
   --transition-speed: 0.3s;
   --minimap-size: 200px; /* Увеличено с 150px до 200px */
@@ -38,7 +35,6 @@
 /* Базовые стили */
 body {
   font-family: "Arial", sans-serif;
-  font-size: 24px;
   background-color: var(--color-background);
   color: var(--color-text);
   overflow: hidden;
@@ -65,7 +61,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  background-color: var(--color-header);
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius);
   margin-bottom: 20px;
   z-index: 2;
@@ -92,16 +88,10 @@ body {
 }
 
 .game__skin-select {
-  font-size: 20px;
-  font-weight: bold;
-  background-color: var(--color-skin-selector);
+  background-color: rgba(255, 255, 255, 0.2);
   color: var(--color-text);
   border: none;
   padding: 5px 10px;
   border-radius: var(--border-radius);
   cursor: pointer;
-}
-
-.game__skin-option {
-  font-weight: bold;
 }

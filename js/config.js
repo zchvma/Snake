@@ -1,6 +1,3 @@
-// Размер клеток в пикселях
-const BASE_GRID_SIZE = 80
-
 // Размеры видимой сетки
 const VISIBLE_GRID = { width: 10, height: 10 }
 
@@ -48,7 +45,6 @@ const THEMES = [
 
 // Экспорт всех констант
 export {
-  BASE_GRID_SIZE,
   VISIBLE_GRID,
   MAX_GRID,
   INITIAL_SPEED,

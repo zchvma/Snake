@@ -3,11 +3,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
   z-index: 2;
-  /* Ensure controls are always visible */
-  visibility: visible !important;
-  opacity: 1 !important;
 }
 
 .game__control-row {
@@ -16,8 +13,8 @@
 }
 
 .game__control-button {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   margin: 5px;
   font-size: 28px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
@@ -75,11 +72,9 @@
 .game__bonus-indicator--speed-up {
   background-color: var(--color-speed-up);
 }
-
 .game__bonus-indicator--speed-down {
   background-color: var(--color-speed-down);
 }
-
 .game__bonus-indicator--inversion {
   background-color: var(--color-inversion);
 }
@@ -250,21 +245,4 @@
 /* Стили для выделения нового рекорда */
 .game__highscores-table .new-record {
   background-color: rgba(76, 175, 80, 0.3);
-}
-
-/* Additional responsive styles for controls */
-@media (max-width: 768px) {
-  .game__control-button {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .game__control-button {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-  }
 }

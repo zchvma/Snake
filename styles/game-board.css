@@ -1,15 +1,12 @@
 /* Контейнер игрового поля */
 .game__board-container {
-  flex: 1 0 auto;
+  flex: 1;
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  margin-top: 20px;
-  max-width: 100vw;
-  max-height: 100vh;
 }
 
 .game__board {

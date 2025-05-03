@@ -1,4 +1,4 @@
-import { VISIBLE_GRID, BASE_GRID_SIZE, EXPANSION_THRESHOLD, THEMES, MAX_GRID } from "./config.js"
+import { VISIBLE_GRID, EXPANSION_THRESHOLD, THEMES, MAX_GRID } from "./config.js"
 import { updateMinimap } from "./minimap.js"
 
 // Инициализирует игровое поле
@@ -26,11 +26,11 @@ function initializeMinimap(gameState) {
 // Отрисовывает сетку игрового поля
 function renderGrid(gameState) {
   try {
-    const { board, visibleGridOffset } = gameState
+    const { baseGridSize, board, visibleGridOffset } = gameState
 
     board.innerHTML = ""
-    board.style.gridTemplateColumns = `repeat(${VISIBLE_GRID.width}, ${BASE_GRID_SIZE}px)`
-    board.style.gridTemplateRows = `repeat(${VISIBLE_GRID.height}, ${BASE_GRID_SIZE}px)`
+    board.style.gridTemplateColumns = `repeat(${VISIBLE_GRID.width}, ${baseGridSize}px)`
+    board.style.gridTemplateRows = `repeat(${VISIBLE_GRID.height}, ${baseGridSize}px)`
 
     for (let row = 0; row < VISIBLE_GRID.height; row++) {
       for (let col = 0; col < VISIBLE_GRID.width; col++) {

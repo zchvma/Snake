@@ -7,25 +7,3 @@
 @import "ui.css";
 @import "animations.css";
 @import "responsive.css";
-
-/* Additional fixes for game display */
-.game {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-.game__board-container {
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.game__board {
-  max-width: 100%;
-}
-
-/* Ensure controls are always visible */
-.game__controls {
-  display: flex;
-  margin-bottom: 20px;
-  z-index: 10;
-}
