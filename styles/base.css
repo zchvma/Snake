@@ -1,6 +1,8 @@
 /* Корневые переменные */
 :root {
-  --grid-size: 80px; /* В 4 раза больше, как запрошено */
+  --grid-size: 40px; /* В 4 раза больше, как запрошено */
+  --control-button-size: 80px;
+  --control-button-font-size: 20px;
   --grid-columns: 20;
   --grid-rows: 20;
   --color-primary: #4caf50;
@@ -21,6 +23,15 @@
   --minimap-size: 200px; /* Увеличено с 150px до 200px */
   --minimap-border: 2px;
   --snake-transition: transform 0.15s ease, background-color 0.2s ease;
+
+  --header-bg: #1a1a1a;
+  --footer-bg: #1a1a1a;
+  --menu-hover: #4caf50;
+  --menu-active: #388e3c;
+  --section-bg: rgba(0, 0, 0, 0.7);
+  --text-color: #ffffff;
+  --border-color: rgba(255, 255, 255, 0.2);
+  --card-bg: rgba(255, 255, 255, 0.05);
 }
 
 /* Сброс стилей */
@@ -53,6 +64,8 @@ body {
   height: 100%;
   padding: 20px;
   position: relative;
+  min-height: 100vh;
+  box-sizing: content-box;
 }
 
 /* Заголовок игры */
@@ -60,7 +73,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
+  padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius);
   margin-bottom: 20px;

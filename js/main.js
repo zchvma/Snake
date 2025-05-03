@@ -5,7 +5,7 @@ import { loadHighScores, updateHighScoresTable } from "./highscores.js"
 import { setupControls } from "./controls.js"
 
 const State = {
-  baseGridSize: 80,
+  baseGridSize: 40,
   board: document.getElementById("game-board"),
   score: document.getElementById("score"),
   level: document.getElementById("level"),

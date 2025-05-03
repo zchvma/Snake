@@ -83,15 +83,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // function adjustLayout() {
-    //     const container = window.getComputedStyle(document.getElementsByClassName("game").item(0));
-    //     let newSize = Math.min(Number(container.height.slice(0, -2)) / 2 / 10, Number(container.width.slice(0, -2)) / 10);
-    //     State.baseGridSize = newSize;
-    //     document.getElementsByTagName("body")[0].style.fontSize = (newSize / 2).toString() + 'px';
-    //     document.documentElement.style.setProperty('--grid-size', newSize.toString() + 'px')
-    // }
-    //
-    // window.addEventListener('resize', adjustLayout);
-    // adjustLayout();
+    function adjustLayout() {
+        if (!document.getElementById("game-section").classList.contains("active")) {
+            return;
+        }
+        const container = window.getComputedStyle(document.getElementsByClassName("game").item(0));
+        let newSize = Math.min(window.innerHeight / 2.2 / 10, Number(container.width.slice(0, -2)) / 10);
+        State.baseGridSize = newSize;
+        // for (let elem of document.getElementsByClassName("game__control-button")) {
+        //     elem.style.
+        // }
+        document.getElementsByTagName("body")[0].style.fontSize = (newSize / 2).toString() + 'px';
+        document.documentElement.style.setProperty('--grid-size', newSize.toString() + 'px')
+        document.documentElement.style.setProperty('--control-button-size', (newSize * 2).toString() + 'px')
+        document.documentElement.style.setProperty('--control-button-font-size', (newSize / 2).toString() + 'px')
+    }
+
+    window.addEventListener('resize', adjustLayout);
+    adjustLayout();
 
 })

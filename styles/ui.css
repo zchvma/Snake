@@ -13,10 +13,10 @@
 }
 
 .game__control-button {
-  width: 70px;
-  height: 70px;
+  width: var(--control-button-size);
+  height: var(--control-button-size);
   margin: 5px;
-  font-size: 28px;
+  font-size: var(--control-button-font-size);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   color: var(--color-text);
   border: 2px solid rgba(255, 255, 255, 0.2);
@@ -40,11 +40,16 @@
 
 /* Статус игры */
 .game__status {
-  padding: 15px;
+  padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius);
   text-align: center;
   z-index: 2;
+
+  position: relative;
+  bottom: 10px;
+
+  margin-bottom: 300px;
 }
 
 .game__status-message {
