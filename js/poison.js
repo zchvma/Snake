@@ -1,4 +1,4 @@
-import {MAX_GRID} from "./config.js";
+import { MAX_GRID } from "./config.js"
 import { getRandomInt, isPositionSafe } from "./utils.js"
 import { updateMinimap } from "./minimap.js"
 import { isInSnakePath } from "./snake.js"
@@ -87,12 +87,7 @@ function generatePoisonZones(gameState, zoneCount = 2) {
                 }
 
                 // Добавляем ячейку, если она в пределах границ
-                if (
-                  newRow >= 0 &&
-                  newRow < gameState.height &&
-                  newCol >= 0 &&
-                  newCol < gameState.width
-                ) {
+                if (newRow >= 0 && newRow < gameState.height && newCol >= 0 && newCol < gameState.width) {
                   zoneCells.push({ row: newRow, col: newCol })
                 }
               }

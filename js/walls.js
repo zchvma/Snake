@@ -1,9 +1,9 @@
-import {MAX_GRID, WALL_GENERATE_GROW_RATE} from "./config.js";
-import {getRandomInt, manhattanDistance} from "./utils.js"
+import { MAX_GRID, WALL_GENERATE_GROW_RATE } from "./config.js"
+import { getRandomInt, manhattanDistance } from "./utils.js"
 import { updateMinimap } from "./minimap.js"
 import { isPositionSafe } from "./utils.js"
 import { isInSnakePath, wouldTrapSnake } from "./snake.js"
-import {renderGame} from "./board.js";
+import { renderGame } from "./board.js"
 
 function generateWalls(gameState, count) {
   try {
@@ -61,10 +61,7 @@ function regenerateWalls(gameState) {
     // Удаляем старые стены после анимации
     setTimeout(() => {
       gameState.walls = []
-      generateWalls(
-        gameState,
-        2 + Math.ceil(WALL_GENERATE_GROW_RATE * Number(gameState.levelCounter)),
-      )
+      generateWalls(gameState, 2 + Math.ceil(WALL_GENERATE_GROW_RATE * Number(gameState.levelCounter)))
     }, 300)
   } catch (error) {
     console.error("Ошибка при перегенерации стен:", error)

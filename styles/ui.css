@@ -1,250 +1,270 @@
 /* Элементы управления */
 .game__controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 60px;
-    z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60px;
+  z-index: 2;
+  /* Ensure controls are always visible */
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .game__control-row {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .game__control-button {
-    width: 100px;
-    height: 100px;
-    margin: 5px;
-    font-size: 28px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-    color: var(--color-text);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100px;
+  height: 100px;
+  margin: 5px;
+  font-size: 28px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  color: var(--color-text);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .game__control-button:hover {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
-    transform: scale(1.05);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+  transform: scale(1.05);
 }
 
 .game__control-button:active {
-    transform: scale(0.95);
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.15));
+  transform: scale(0.95);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.15));
 }
 
 /* Статус игры */
 .game__status {
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: var(--border-radius);
-    text-align: center;
-    z-index: 2;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  text-align: center;
+  z-index: 2;
 }
 
 .game__status-message {
-    margin-bottom: 10px;
-    font-weight: bold;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .game__active-bonuses {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 /* Индикаторы бонусов */
 .game__bonus-indicator {
-    padding: 5px 10px;
-    margin: 5px;
-    border-radius: 15px;
-    font-size: 14px;
-    color: white;
-    font-weight: bold;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 15px;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .game__bonus-indicator--speed-up {
-    background-color: var(--color-speed-up);
+  background-color: var(--color-speed-up);
 }
 
 .game__bonus-indicator--speed-down {
-    background-color: var(--color-speed-down);
+  background-color: var(--color-speed-down);
 }
 
 .game__bonus-indicator--inversion {
-    background-color: var(--color-inversion);
+  background-color: var(--color-inversion);
 }
 
 .game__bonus-indicator.removing {
-    transform: translateY(-10px);
-    opacity: 0;
+  transform: translateY(-10px);
+  opacity: 0;
 }
 
 /* Оверлей игры */
 .game__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-overlay);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    transition: opacity 0.5s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-overlay);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  transition: opacity 0.5s ease;
 }
 
 .game__overlay-content {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-    padding: 40px;
-    border-radius: var(--border-radius);
-    text-align: center;
-    max-width: 90%;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  padding: 40px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  max-width: 90%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .game__overlay.hiding {
-    opacity: 0;
+  opacity: 0;
 }
 
 .game__overlay.hiding .game__overlay-content {
-    transform: scale(0.8);
+  transform: scale(0.8);
 }
 
 .game__overlay-title {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-    color: var(--color-primary);
-    text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: var(--color-primary);
+  text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
 }
 
 .game__overlay-message {
-    font-size: 1.2em;
-    margin-bottom: 30px;
+  font-size: 1.2em;
+  margin-bottom: 30px;
 }
 
 .game__start-button {
-    padding: 15px 30px;
-    background: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: 1.2em;
-    font-weight: bold;
-    transition: all 0.2s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  padding: 15px 30px;
+  background: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .game__start-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .game__start-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Стили для таблицы лучших результатов */
 .game__highscores {
-    margin-bottom: 20px;
-    max-height: 300px;
-    overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: var(--border-radius);
-    padding: 10px;
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: var(--border-radius);
+  padding: 10px;
 }
 
 .game__highscores-title {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    color: var(--color-primary);
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: var(--color-primary);
 }
 
 .game__highscores-table {
-    width: 100%;
-    border-collapse: collapse;
-    color: var(--color-text);
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--color-text);
 }
 
 .game__highscores-table th,
 .game__highscores-table td {
-    padding: 8px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .game__highscores-table th {
-    background-color: rgba(255, 255, 255, 0.1);
-    font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
 }
 
 .game__highscores-table tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .game__highscores-table tr:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Стили для формы ввода имени */
 .game__name-form {
-    margin: 20px 0;
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: var(--border-radius);
+  margin: 20px 0;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: var(--border-radius);
 }
 
 .game__name-input-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .game__name-input-container label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .game__name-input-container input {
-    padding: 8px;
-    border-radius: var(--border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background-color: rgba(0, 0, 0, 0.2);
-    color: var(--color-text);
+  padding: 8px;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--color-text);
 }
 
 .game__save-button {
-    padding: 8px 15px;
-    background: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s ease;
+  padding: 8px 15px;
+  background: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
 }
 
 .game__save-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .game__save-button:active {
-    transform: translateY(1px);
+  transform: translateY(1px);
 }
 
 /* Стили для выделения нового рекорда */
 .game__highscores-table .new-record {
-    background-color: rgba(76, 175, 80, 0.3);
+  background-color: rgba(76, 175, 80, 0.3);
+}
+
+/* Additional responsive styles for controls */
+@media (max-width: 768px) {
+  .game__control-button {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game__control-button {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
 }

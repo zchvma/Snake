@@ -1,162 +1,162 @@
 /* Стили для еды */
 .cell--food {
-    position: relative;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .cell--food::after {
-    content: "";
-    position: absolute;
-    top: 20%;
-    left: 20%;
-    width: 60%;
-    height: 60%;
-    background-color: var(--color-accent);
-    border-radius: 50%;
-    box-shadow: 0 0 15px rgba(255, 87, 34, 0.7);
-    animation: pulse 1s infinite alternate;
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background-color: var(--color-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(255, 87, 34, 0.7);
+  animation: pulse 1s infinite alternate;
 }
 
 .cell--food:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 /* Стили для стен */
 .cell--wall {
-    background-color: var(--color-wall);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease, opacity 0.3s ease;
+  background-color: var(--color-wall);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .cell--wall.destroying {
-    transform: scale(0.1);
-    opacity: 0;
+  transform: scale(0.1);
+  opacity: 0;
 }
 
 /* Стили для порталов */
 .cell--portal-1::after,
 .cell--portal-2::after,
 .cell--portal-3::after {
-    content: "";
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 80%;
-    height: 80%;
-    border-radius: 50%;
-    animation: portal-pulse 1.5s infinite;
-    transition: transform 0.5s ease;
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  animation: portal-pulse 1.5s infinite;
+  transition: transform 0.5s ease;
 }
 
 .cell--portal-1::after {
-    background-color: var(--color-portal);
-    box-shadow: 0 0 20px rgba(156, 39, 176, 0.8);
+  background-color: var(--color-portal);
+  box-shadow: 0 0 20px rgba(156, 39, 176, 0.8);
 }
 
 .cell--portal-2::after {
-    background-color: #2196f3;
-    box-shadow: 0 0 20px rgba(33, 150, 243, 0.8);
+  background-color: #2196f3;
+  box-shadow: 0 0 20px rgba(33, 150, 243, 0.8);
 }
 
 .cell--portal-3::after {
-    background-color: #ff9800;
-    box-shadow: 0 0 20px rgba(255, 152, 0, 0.8);
+  background-color: #ff9800;
+  box-shadow: 0 0 20px rgba(255, 152, 0, 0.8);
 }
 
 /* Эффект активации портала */
 .cell--portal-active::after {
-    transform: scale(1.5) rotate(180deg);
+  transform: scale(1.5) rotate(180deg);
 }
 
 /* Стили для бонусов */
 .cell--speedUp {
-    position: relative;
+  position: relative;
 }
 
 .cell--speedUp::after {
-    content: "";
-    position: absolute;
-    top: 20%;
-    left: 20%;
-    width: 60%;
-    height: 60%;
-    background-color: var(--color-speed-up);
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    animation: rotate 3s linear infinite;
-    transition: transform 0.3s ease;
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background-color: var(--color-speed-up);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  animation: rotate 3s linear infinite;
+  transition: transform 0.3s ease;
 }
 
 .cell--speedDown {
-    position: relative;
+  position: relative;
 }
 
 .cell--speedDown::after {
-    content: "";
-    position: absolute;
-    top: 20%;
-    left: 20%;
-    width: 60%;
-    height: 60%;
-    background-color: var(--color-speed-down);
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    animation: rotate 3s linear infinite reverse;
-    transition: transform 0.3s ease;
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background-color: var(--color-speed-down);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  animation: rotate 3s linear infinite reverse;
+  transition: transform 0.3s ease;
 }
 
 .cell--destroyer {
-    position: relative;
+  position: relative;
 }
 
 .cell--destroyer::after {
-    content: "";
-    position: absolute;
-    top: 15%;
-    left: 15%;
-    width: 70%;
-    height: 70%;
-    background-color: var(--color-destroyer);
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    animation: pulse 1s infinite alternate;
-    transition: transform 0.3s ease;
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 70%;
+  height: 70%;
+  background-color: var(--color-destroyer);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: pulse 1s infinite alternate;
+  transition: transform 0.3s ease;
 }
 
 .cell--inversion {
-    position: relative;
+  position: relative;
 }
 
 .cell--inversion::after {
-    content: "";
-    position: absolute;
-    top: 20%;
-    left: 20%;
-    width: 60%;
-    height: 60%;
-    background-color: var(--color-inversion);
-    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-    transform: rotate(45deg);
-    animation: pulse 1s infinite alternate;
-    transition: transform 0.3s ease;
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background-color: var(--color-inversion);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  transform: rotate(45deg);
+  animation: pulse 1s infinite alternate;
+  transition: transform 0.3s ease;
 }
 
 .cell--poison {
-    position: relative;
+  position: relative;
 }
 
 .cell--poison::after {
-    content: "";
-    position: absolute;
-    top: 15%;
-    left: 15%;
-    width: 70%;
-    height: 70%;
-    background-color: var(--color-poison);
-    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-    opacity: 0.7;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 70%;
+  height: 70%;
+  background-color: var(--color-poison);
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+  opacity: 0.7;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 /* Анимация сбора бонуса */
 .bonus-collected::after {
-    transform: scale(1.5) rotate(360deg);
-    opacity: 0;
+  transform: scale(1.5) rotate(360deg);
+  opacity: 0;
 }

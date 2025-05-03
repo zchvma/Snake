@@ -1,4 +1,4 @@
-import {VISIBLE_GRID, BASE_GRID_SIZE, EXPANSION_THRESHOLD, THEMES, MAX_GRID} from "./config.js"
+import { VISIBLE_GRID, BASE_GRID_SIZE, EXPANSION_THRESHOLD, THEMES, MAX_GRID } from "./config.js"
 import { updateMinimap } from "./minimap.js" // Import updateMinimap
 
 function initializeBoard(gameState) {

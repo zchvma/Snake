@@ -1,107 +1,107 @@
 /* Корневые переменные */
 :root {
-    --grid-size: 80px; /* В 4 раза больше, как запрошено */
-    --grid-columns: 20;
-    --grid-rows: 20;
-    --color-primary: #4caf50;
-    --color-secondary: #388e3c;
-    --color-accent: #ff5722;
-    --color-background: #1a1a1a;
-    --color-text: #ffffff;
-    --color-wall: #795548;
-    --color-portal: #9c27b0;
-    --color-speed-up: #f44336;
-    --color-speed-down: #2196f3;
-    --color-destroyer: #ff9800;
-    --color-inversion: #e91e63;
-    --color-poison: #8bc34a;
-    --color-header: rgba(100, 100, 100, 0.85);
-    --color-overlay: rgba(0, 0, 0, 0.85);
-    --color-footer: rgba(100, 100, 100, 0.85);
-    --color-skin-selector: rgba(160, 160, 160, 0.8);
-    --border-radius: 8px;
-    --transition-speed: 0.3s;
-    --minimap-size: 200px; /* Увеличено с 150px до 200px */
-    --minimap-border: 2px;
-    --snake-transition: transform 0.15s ease, background-color 0.2s ease;
+  --grid-size: 80px; /* В 4 раза больше, как запрошено */
+  --grid-columns: 20;
+  --grid-rows: 20;
+  --color-primary: #4caf50;
+  --color-secondary: #388e3c;
+  --color-accent: #ff5722;
+  --color-background: #1a1a1a;
+  --color-text: #ffffff;
+  --color-wall: #795548;
+  --color-portal: #9c27b0;
+  --color-speed-up: #f44336;
+  --color-speed-down: #2196f3;
+  --color-destroyer: #ff9800;
+  --color-inversion: #e91e63;
+  --color-poison: #8bc34a;
+  --color-header: rgba(100, 100, 100, 0.85);
+  --color-overlay: rgba(0, 0, 0, 0.85);
+  --color-footer: rgba(100, 100, 100, 0.85);
+  --color-skin-selector: rgba(160, 160, 160, 0.8);
+  --border-radius: 8px;
+  --transition-speed: 0.3s;
+  --minimap-size: 200px; /* Увеличено с 150px до 200px */
+  --minimap-border: 2px;
+  --snake-transition: transform 0.15s ease, background-color 0.2s ease;
 }
 
 /* Сброс стилей */
 *,
 *::before,
 *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Базовые стили */
 body {
-    font-family: "Arial", sans-serif;
-    font-size: 24px;
-    background-color: var(--color-background);
-    color: var(--color-text);
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  font-family: "Arial", sans-serif;
+  font-size: 24px;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Контейнер игры */
 .game {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  position: relative;
 }
 
 /* Заголовок игры */
 .game__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background-color: var(--color-header);
-    border-radius: var(--border-radius);
-    margin-bottom: 20px;
-    z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--color-header);
+  border-radius: var(--border-radius);
+  margin-bottom: 20px;
+  z-index: 2;
 }
 
 .game__score,
 .game__level,
 .game__skin-selector {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .game__score-label,
 .game__level-label,
 .game__skin-label {
-    margin-right: 5px;
-    font-weight: bold;
+  margin-right: 5px;
+  font-weight: bold;
 }
 
 .game__score-value,
 .game__level-value {
-    font-size: 1.2em;
-    font-weight: bold;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
 .game__skin-select {
-    font-size: 20px;
-    font-weight: bold;
-    background-color: var(--color-skin-selector);
-    color: var(--color-text);
-    border: none;
-    padding: 5px 10px;
-    border-radius: var(--border-radius);
-    cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: var(--color-skin-selector);
+  color: var(--color-text);
+  border: none;
+  padding: 5px 10px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
 }
 
 .game__skin-option {
-    font-weight: bold;
+  font-weight: bold;
 }

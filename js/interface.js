@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Show corresponding section
       const sectionId = link.getAttribute("data-section") + "-section"
       document.getElementById(sectionId).classList.add("active")
+
+      // Scroll to top when changing sections
+      window.scrollTo(0, 0)
     })
   })
 

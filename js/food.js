@@ -1,11 +1,10 @@
-import {MAX_GRID} from "./config.js";
+import { MAX_GRID } from "./config.js"
 import { getRandomInt, positionsEqual, isPositionSafe } from "./utils.js"
 import { updateMinimap } from "./minimap.js"
 import { isInSnakePath } from "./snake.js"
 
 function generateFood(gameState) {
   try {
-
     let validPosition = false
     let newFood = {}
     let attempts = 0
