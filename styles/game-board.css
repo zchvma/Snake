@@ -7,19 +7,14 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  /* Fixed dimensions based on grid size */
-  width: calc(var(--grid-size) * var(--visible-grid-width));
-  height: calc(var(--grid-size) * var(--visible-grid-height));
+  margin-top: 20px;
 }
 
 .game__board {
   display: grid;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: var(--border-radius);
-  transition: background 0.5s ease;
-  /* Fixed dimensions to maintain grid size */
-  width: 100%;
-  height: 100%;
+  transition: background 0.5s ease; /* Изменено: убрана трансформация для предотвращения пульсации */
 }
 
 /* Стили ячеек */

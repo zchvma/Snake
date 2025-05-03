@@ -1,8 +1,6 @@
 /* Корневые переменные */
 :root {
   --grid-size: 80px; /* В 4 раза больше, как запрошено */
-  --visible-grid-width: 10;
-  --visible-grid-height: 10;
   --grid-columns: 20;
   --grid-rows: 20;
   --color-primary: #4caf50;

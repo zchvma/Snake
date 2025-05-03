@@ -98,19 +98,13 @@ body {
 /* Game Section Styles - Fix for game fitting on screen */
 #game-section {
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow-y: auto;
 }
 
 #game-section .game {
   transform-origin: top center;
-  display: flex;
-  flex-direction: column;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
 }
 
 /* About Section Styles */
@@ -120,7 +114,8 @@ body {
   padding: 2rem;
   margin: 1rem 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  /* Removed max-height and overflow-y to use the main page scroll */
+  max-height: calc(100vh - 150px);
+  overflow-y: auto; /* Add scroll for About section */
 }
 
 .about-container h2 {
@@ -163,7 +158,8 @@ body {
   padding: 2rem;
   margin: 1rem 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  /* Removed max-height and overflow-y to use the main page scroll */
+  max-height: calc(100vh - 150px);
+  overflow-y: auto; /* Add scroll for Results section */
 }
 
 .results-container h2 {
@@ -233,5 +229,18 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 0.3rem;
+  }
+}
+
+/* Fix for game board scaling */
+@media (max-height: 800px) {
+  :root {
+    --grid-size: 40px;
+  }
+}
+
+@media (max-height: 600px) {
+  :root {
+    --grid-size: 30px;
   }
 }
