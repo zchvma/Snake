@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Snake Game</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+<div class="game">
+    <div class="game__header">
+        <div class="game__score">
+            <span class="game__score-label">Score: </span>
+            <span class="game__score-value" id="score">0</span>
+        </div>
+        <div class="game__level">
+            <span class="game__level-label">Level: </span>
+            <span class="game__level-value" id="level">1</span>
+        </div>
+        <div class="game__skin-selector">
+            <span class="game__skin-label">Skin: </span>
+            <label for="skin-select"></label>
+            <select class="game__skin-select" id="skin-select">
+                <option class="game__skin-option" value="default">Default</option>
+                <option class="game__skin-option" value="striped">Striped</option>
+                <option class="game__skin-option" value="fire">Fire</option>
+                <option class="game__skin-option" value="ice">Ice</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="game__board-container">
+        <div class="game__board" id="game-board"></div>
+
+        <!-- Minimap Container -->
+        <div class="game__minimap-container">
+            <div class="game__minimap" id="minimap"></div>
+        </div>
+    </div>
+
+    <div class="game__controls">
+        <div class="game__control-row">
+            <button class="game__control-button game__control-button--up" id="up-btn">↑</button>
+        </div>
+        <div class="game__control-row">
+            <button class="game__control-button game__control-button--left" id="left-btn">←</button>
+            <button class="game__control-button game__control-button--down" id="down-btn">↓</button>
+            <button class="game__control-button game__control-button--right" id="right-btn">→</button>
+        </div>
+    </div>
+
+    <div class="game__status">
+        <div class="game__status-message" id="status-message"></div>
+        <div class="game__active-bonuses" id="active-bonuses"></div>
+    </div>
+
+    <div class="game__overlay" id="game-overlay">
+        <div class="game__overlay-content">
+            <h2 class="game__overlay-title" id="overlay-title">Snake Game</h2>
+            <p class="game__overlay-message" id="overlay-message">Press Start to begin!</p>
+
+            <!-- Добавляем таблицу лучших результатов -->
+            <div class="game__highscores">
+                <h3 class="game__highscores-title">Лучшие результаты</h3>
+                <table class="game__highscores-table">
+                    <thead>
+                    <tr>
+                        <th>Место</th>
+                        <th>Имя</th>
+                        <th>Очки</th>
+                        <th>Уровень</th>
+                        <th>Дата</th>
+                    </tr>
+                    </thead>
+                    <tbody id="highscores-body">
+                    <!-- Здесь будут отображаться лучшие результаты -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Форма для ввода имени игрока при завершении игры -->
+            <div class="game__name-form" id="name-form" style="display: none;">
+                <h3>Поздравляем! Вы попали в таблицу лидеров!</h3>
+                <div class="game__name-input-container">
+                    <label for="player-name">Введите ваше имя:</label>
+                    <input type="text" id="player-name" maxlength="15" placeholder="Игрок">
+                    <button id="save-score-btn" class="game__save-button">Сохранить</button>
+                </div>
+            </div>
+
+            <button class="game__start-button" id="start-btn">Start Game</button>
+        </div>
+    </div>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

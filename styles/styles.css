@@ -1,0 +1,9 @@
+/* Основной файл стилей, импортирующий все модули */
+@import "base.css";
+@import "game-board.css";
+@import "snake.css";
+@import "elements.css";
+@import "minimap.css";
+@import "ui.css";
+@import "animations.css";
+@import "responsive.css";

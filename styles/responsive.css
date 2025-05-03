@@ -1,0 +1,31 @@
+/* Адаптивный дизайн */
+@media (max-width: 1200px) {
+    :root {
+        --grid-size: 60px;
+        --minimap-size: 180px;
+    }
+}
+
+@media (max-width: 900px) {
+    :root {
+        --grid-size: 40px;
+        --minimap-size: 150px;
+    }
+}
+
+@media (max-width: 600px) {
+    :root {
+        --grid-size: 30px;
+        --minimap-size: 120px;
+    }
+
+    .game__header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game__control-button {
+        width: 60px;
+        height: 60px;
+    }
+}

@@ -1,0 +1,57 @@
+/* Контейнер игрового поля */
+.game__board-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.game__board {
+    display: grid;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius);
+    transition: background 0.5s ease; /* Изменено: убрана трансформация для предотвращения пульсации */
+}
+
+/* Стили ячеек */
+.cell {
+    width: var(--grid-size);
+    height: var(--grid-size);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+/* Темы в зависимости от уровня */
+.game__board--forest {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 15 L60 40 L40 40 Z" fill="%234caf50"/><path d="M50 20 L65 55 L35 55 Z" fill="%23388e3c"/><path d="M50 25 L70 70 L30 70 Z" fill="%232e7d32"/><rect x="45" y="70" width="10" height="15" fill="%23795548"/></svg>');
+    background-size: 200px 200px;
+}
+
+.game__board--desert {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="%23ffc107"/><circle cx="20" cy="20" r="5" fill="%23ffffff"/><circle cx="80" cy="30" r="3" fill="%23ffffff"/><circle cx="35" cy="80" r="4" fill="%23ffffff"/><circle cx="70" cy="70" r="2" fill="%23ffffff"/></svg>');
+    background-size: 200px 200px;
+}
+
+.game__board--ocean {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0 50 Q25 40 50 50 Q75 60 100 50 L100 100 L0 100 Z" fill="%232196f3"/><path d="M0 60 Q25 50 50 60 Q75 70 100 60 L100 100 L0 100 Z" fill="%2303a9f4"/><path d="M0 70 Q25 60 50 70 Q75 80 100 70 L100 100 L0 100 Z" fill="%2300bcd4"/></svg>');
+    background-size: 200px 200px;
+}
+
+.game__board--volcano {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M30 80 L50 20 L70 80 Z" fill="%23795548"/><path d="M35 80 L50 30 L65 80 Z" fill="%23f44336"/><path d="M40 80 L50 40 L60 80 Z" fill="%23ff5722"/><rect x="0" y="80" width="100" height="20" fill="%23795548"/></svg>');
+    background-size: 200px 200px;
+}
+
+.game__board--space {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="%23ffffff"/><circle cx="20" cy="50" r="0.5" fill="%23ffffff"/><circle cx="30" cy="30" r="0.8" fill="%23ffffff"/><circle cx="40" cy="70" r="0.6" fill="%23ffffff"/><circle cx="50" cy="10" r="0.7" fill="%23ffffff"/><circle cx="60" cy="40" r="0.5" fill="%23ffffff"/><circle cx="70" cy="80" r="0.9" fill="%23ffffff"/><circle cx="80" cy="20" r="0.7" fill="%23ffffff"/><circle cx="90" cy="60" r="0.8" fill="%23ffffff"/></svg>');
+    background-size: 200px 200px;
+}

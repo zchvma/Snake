@@ -1,0 +1,90 @@
+/* Мини-карта */
+.game__minimap-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: var(--minimap-size);
+    height: var(--minimap-size);
+    background-color: rgba(0, 0, 0, 0.7);
+    border: var(--minimap-border) solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    z-index: 5;
+}
+
+.game__minimap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.game__minimap-snake {
+    position: absolute;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    transition: transform 0.2s ease, left 0.2s ease, top 0.2s ease;
+}
+
+.game__minimap-head {
+    position: absolute;
+    background-color: var(--color-secondary);
+    border-radius: 50%;
+    transition: transform 0.2s ease, left 0.2s ease, top 0.2s ease;
+}
+
+.game__minimap-food {
+    position: absolute;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.game__minimap-wall {
+    position: absolute;
+    background-color: var(--color-wall);
+}
+
+.game__minimap-viewport {
+    position: absolute;
+    border: 2px solid white;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: left 0.3s ease, top 0.3s ease;
+}
+
+.game__minimap-boundary {
+    position: absolute;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+    background-color: transparent;
+}
+
+.game__minimap-poison {
+    position: absolute;
+    background-color: var(--color-poison);
+    opacity: 0.7;
+}
+
+/* Стили порталов на мини-карте */
+.game__minimap-portal-1,
+.game__minimap-portal-2,
+.game__minimap-portal-3 {
+    position: absolute;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.game__minimap-portal-1 {
+    background-color: var(--color-portal);
+}
+
+.game__minimap-portal-2 {
+    background-color: #2196f3;
+}
+
+.game__minimap-portal-3 {
+    background-color: #ff9800;
+}
+
+/* Активация портала на мини-карте */
+.game__minimap-portal-active {
+    transform: scale(1.5);
+}
