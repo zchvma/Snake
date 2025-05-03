@@ -3,6 +3,7 @@ import { getRandomInt, positionsEqual, isPositionSafe } from "./utils.js"
 import { updateMinimap } from "./minimap.js"
 import { isInSnakePath } from "./snake.js"
 
+// Генерирует еду на игровом поле
 function generateFood(gameState) {
   try {
     let validPosition = false
@@ -20,7 +21,6 @@ function generateFood(gameState) {
       attempts++
     }
 
-    // Если мы не смогли найти валидную позицию после максимального количества попыток, используем любую валидную позицию
     if (!validPosition) {
       attempts = 0
       while (!validPosition && attempts < maxAttempts) {
@@ -34,9 +34,7 @@ function generateFood(gameState) {
       }
     }
 
-    // Если все еще нет валидной позиции, используем значение по умолчанию
     if (!validPosition) {
-      // Находим любую позицию, которая не на змейке
       for (let row = 0; row < MAX_GRID.height; row++) {
         for (let col = 0; col < MAX_GRID.width; col++) {
           const pos = { row, col }
@@ -61,7 +59,6 @@ function generateFood(gameState) {
 
     gameState.food = newFood
 
-    // Анимация появления еды
     setTimeout(() => {
       const foodCell = document.querySelector(
         `.cell[data-row="${gameState.food.row}"][data-col="${gameState.food.col}"]`,
@@ -76,7 +73,7 @@ function generateFood(gameState) {
       }
     }, 100)
 
-    updateMinimap(gameState) // Обновляем мини-карту после генерации еды
+    updateMinimap(gameState)
   } catch (error) {
     console.error("Ошибка при генерации еды:", error)
   }

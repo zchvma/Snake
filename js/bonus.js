@@ -13,6 +13,7 @@ import { renderGame, updateViewportPosition } from "./board.js"
 import { isInSnakePath, moveSnake, checkCollisions } from "./snake.js"
 import { destroyNearbyWalls } from "./walls.js"
 
+// Генерирует бонус на игровом поле
 function generateBonus(gameState) {
   try {
     const bonusTypes = ["speedUp", "speedDown", "destroyer", "inversion"]
@@ -34,11 +35,9 @@ function generateBonus(gameState) {
       attempts++
     }
 
-    // Если мы не смогли найти валидную позицию после максимального количества попыток, пропускаем этот бонус
     if (validPosition) {
       gameState.bonuses.push(bonus)
 
-      // Анимация появления бонуса
       setTimeout(() => {
         const bonusCell = document.querySelector(`.cell[data-row="${bonus.row}"][data-col="${bonus.col}"]`)
         if (bonusCell) {
@@ -51,7 +50,6 @@ function generateBonus(gameState) {
         }
       }, 100)
 
-      // Удаляем бонус через некоторое время, если он не был собран
       setTimeout(() => {
         try {
           const index = gameState.bonuses.findIndex(
@@ -59,7 +57,6 @@ function generateBonus(gameState) {
           )
 
           if (index !== -1) {
-            // Анимация исчезновения бонуса
             const bonusCell = document.querySelector(`.cell[data-row="${bonus.row}"][data-col="${bonus.col}"]`)
             if (bonusCell) {
               bonusCell.style.transition = "transform 0.3s ease, opacity 0.3s ease"
@@ -67,11 +64,10 @@ function generateBonus(gameState) {
               bonusCell.style.opacity = "0"
             }
 
-            // Удаляем бонус после анимации
             setTimeout(() => {
               gameState.bonuses.splice(index, 1)
-              updateMinimap(gameState) // Обновляем мини-карту после удаления бонуса
-              renderGame(gameState) // Перерисовываем игру после удаления бонуса
+              updateMinimap(gameState)
+              renderGame(gameState)
             }, 300)
           }
         } catch (error) {
@@ -84,6 +80,7 @@ function generateBonus(gameState) {
   }
 }
 
+// Применяет эффект бонуса
 function applyBonus(gameState, type) {
   try {
     const currentTime = Date.now()
@@ -129,11 +126,11 @@ function applyBonus(gameState, type) {
   }
 }
 
+// Обновляет эффекты активных бонусов
 function updateBonusEffects(gameState) {
   try {
     const currentTime = Date.now()
 
-    // Проверяем бонус ускорения
     if (gameState.activeBonusEffects.speedUp.active && currentTime > gameState.activeBonusEffects.speedUp.endTime) {
       gameState.activeBonusEffects.speedUp.active = false
       gameState.gameSpeed = calculateBaseSpeed(gameState)
@@ -141,7 +138,6 @@ function updateBonusEffects(gameState) {
       removeBonusIndicator(gameState, "Speed Up")
     }
 
-    // Проверяем бонус замедления
     if (gameState.activeBonusEffects.speedDown.active && currentTime > gameState.activeBonusEffects.speedDown.endTime) {
       gameState.activeBonusEffects.speedDown.active = false
       gameState.gameSpeed = calculateBaseSpeed(gameState)
@@ -149,7 +145,6 @@ function updateBonusEffects(gameState) {
       removeBonusIndicator(gameState, "Speed Down")
     }
 
-    // Проверяем бонус инверсии
     if (gameState.activeBonusEffects.inversion.active && currentTime > gameState.activeBonusEffects.inversion.endTime) {
       gameState.activeBonusEffects.inversion.active = false
       gameState.isInverted = false
@@ -160,10 +155,12 @@ function updateBonusEffects(gameState) {
   }
 }
 
+// Рассчитывает базовую скорость игры в зависимости от уровня
 function calculateBaseSpeed(gameState) {
   return Math.max(INITIAL_SPEED - (gameState.levelCounter - 1) * 10, MAX_SPEED)
 }
 
+// Обновляет игровой интервал
 function updateGameInterval(gameState) {
   try {
     if (gameState.gameInterval) {
@@ -185,9 +182,9 @@ function updateGameInterval(gameState) {
   }
 }
 
+// Добавляет индикатор активного бонуса
 function addBonusIndicator(gameState, text, className) {
   try {
-    // Удаляем существующий индикатор с таким же текстом, если он существует
     removeBonusIndicator(gameState, text)
 
     const indicator = document.createElement("div")
@@ -196,13 +193,11 @@ function addBonusIndicator(gameState, text, className) {
     indicator.textContent = text
     indicator.dataset.bonusName = text
 
-    // Добавляем анимацию появления
     indicator.style.opacity = "0"
     indicator.style.transform = "translateY(10px)"
 
     gameState.activeBonuses.appendChild(indicator)
 
-    // Запускаем анимацию появления
     setTimeout(() => {
       indicator.style.transition = "opacity 0.3s ease, transform 0.3s ease"
       indicator.style.opacity = "1"
@@ -213,15 +208,14 @@ function addBonusIndicator(gameState, text, className) {
   }
 }
 
+// Удаляет индикатор активного бонуса
 function removeBonusIndicator(gameState, text) {
   try {
     const indicators = gameState.activeBonuses.querySelectorAll(".game__bonus-indicator")
     indicators.forEach((indicator) => {
       if (indicator.dataset.bonusName === text) {
-        // Добавляем анимацию исчезновения
         indicator.classList.add("removing")
 
-        // Удаляем элемент после завершения анимации
         setTimeout(() => {
           indicator.remove()
         }, 300)

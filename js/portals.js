@@ -3,15 +3,14 @@ import { getRandomInt, positionsEqual, isPositionSafe } from "./utils.js"
 import { updateMinimap } from "./minimap.js"
 import { isInSnakePath } from "./snake.js"
 
+// Генерирует порталы на игровом поле
 function generatePortals(gameState, count = 4) {
   try {
     gameState.portals = []
 
-    // Доступное количество порталов для генерации
     count = Math.min(count - (count % 2), MAX_PORTAL_PAIRS * 2)
 
     for (let pair = 0; pair < count / 2; pair++) {
-      // Генерируем пару порталов одного цвета
       for (let i = 0; i < 2; i++) {
         let validPosition = false
         let portal = {}
@@ -32,11 +31,9 @@ function generatePortals(gameState, count = 4) {
           attempts++
         }
 
-        // Нет места для генерации - скип
         if (validPosition) {
           gameState.portals.push(portal)
 
-          // Анимация появления портала
           setTimeout(
             () => {
               const portalCell = document.querySelector(`.cell[data-row="${portal.row}"][data-col="${portal.col}"]`)
@@ -50,12 +47,12 @@ function generatePortals(gameState, count = 4) {
               }
             },
             (pair * 2 + i) * 100,
-          ) // Последовательное появление порталов
+          )
         }
       }
     }
 
-    updateMinimap(gameState) // Обновляем мини-карту после генерации порталов
+    updateMinimap(gameState)
   } catch (error) {
     console.error("Ошибка при генерации порталов:", error)
   }

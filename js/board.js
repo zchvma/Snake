@@ -1,6 +1,7 @@
 import { VISIBLE_GRID, BASE_GRID_SIZE, EXPANSION_THRESHOLD, THEMES, MAX_GRID } from "./config.js"
-import { updateMinimap } from "./minimap.js" // Import updateMinimap
+import { updateMinimap } from "./minimap.js"
 
+// Инициализирует игровое поле
 function initializeBoard(gameState) {
   try {
     gameState.board.innerHTML = ""
@@ -12,6 +13,7 @@ function initializeBoard(gameState) {
   }
 }
 
+// Инициализирует мини-карту
 function initializeMinimap(gameState) {
   try {
     gameState.ui.minimap.innerHTML = ""
@@ -21,6 +23,7 @@ function initializeMinimap(gameState) {
   }
 }
 
+// Отрисовывает сетку игрового поля
 function renderGrid(gameState) {
   try {
     const { board, visibleGridOffset } = gameState
@@ -33,7 +36,6 @@ function renderGrid(gameState) {
       for (let col = 0; col < VISIBLE_GRID.width; col++) {
         const cell = document.createElement("div")
         cell.classList.add("cell")
-        // Добавляет ячейкам некоторые хранящиеся в них данные, которые потом будут использованы
         cell.dataset.row = (row + visibleGridOffset.row).toString()
         cell.dataset.col = (col + visibleGridOffset.col).toString()
         board.appendChild(cell)
@@ -44,6 +46,7 @@ function renderGrid(gameState) {
   }
 }
 
+// Обновляет позицию видимой области игрового поля
 function updateViewportPosition(gameState) {
   try {
     const { snake, visibleGridOffset } = gameState
@@ -54,7 +57,6 @@ function updateViewportPosition(gameState) {
     let needsUpdate = false
     const newVisibleOffset = { ...visibleGridOffset }
 
-    // В зависимости от направления движения задает сдвиг для начальной позиции прорисовки поля
     if (head.row - visibleGridOffset.row + EXPANSION_THRESHOLD >= VISIBLE_GRID.height) {
       newVisibleOffset.row = Math.min(
         head.row - Math.floor(VISIBLE_GRID.height / 2),
@@ -82,7 +84,6 @@ function updateViewportPosition(gameState) {
     }
 
     if (needsUpdate) {
-      // Добавляем плавный переход для viewport на миникарте
       const viewportElement = document.querySelector(".game__minimap-viewport")
       if (viewportElement) {
         viewportElement.style.transition = "left 0.3s ease, top 0.3s ease"
@@ -102,16 +103,15 @@ function updateViewportPosition(gameState) {
   }
 }
 
+// Применяет тему к игровому полю в зависимости от уровня
 function applyTheme(gameState) {
   try {
     const { board, levelCounter } = gameState
 
-    // Удаляем все классы тем
     THEMES.forEach((theme) => {
       board.classList.remove(theme.name)
     })
 
-    // Находим подходящую тему для текущего уровня
     let currentTheme = THEMES[0]
     for (let i = THEMES.length - 1; i >= 0; i--) {
       if (levelCounter >= THEMES[i].minLevel) {
@@ -120,7 +120,6 @@ function applyTheme(gameState) {
       }
     }
 
-    // Применяем тему с плавным переходом
     board.style.transition = "background 0.5s ease"
     board.classList.add(currentTheme.name)
   } catch (error) {
@@ -128,11 +127,11 @@ function applyTheme(gameState) {
   }
 }
 
+// Отрисовывает все элементы игры
 function renderGame(gameState) {
   try {
     const { snake, food, walls, portals, bonuses, poisonZones, visibleGridOffset, currentSkin, direction } = gameState
 
-    // Очищаем все ячейки
     const cells = document.querySelectorAll(".cell")
     cells.forEach((cell) => {
       const classList = Array.from(cell.classList)
@@ -143,7 +142,6 @@ function renderGame(gameState) {
       })
     })
 
-    // Вспомогательная функция для отрисовки элемента, если он находится в видимой сетке
     function renderElement(element, className) {
       if (
         element.row >= visibleGridOffset.row &&
@@ -160,11 +158,9 @@ function renderGame(gameState) {
       return null
     }
 
-    // Отрисовка змейки
     snake.forEach((segment, index) => {
       const cell = renderElement(segment, "cell--snake")
       if (cell) {
-        // Добавляем класс snake-segment для transition эффектов
         cell.classList.add("snake-segment")
 
         cell.classList.add(`cell--${currentSkin}`)
@@ -174,25 +170,20 @@ function renderGame(gameState) {
       }
     })
 
-    // Отрисовка еды
     if (food && food.row !== undefined && food.col !== undefined) {
       renderElement(food, "cell--food")
     }
 
-    // Отрисовка стен
     walls.forEach((wall) => renderElement(wall, "cell--wall"))
 
-    // Отрисовка порталов
     portals.forEach((portal) => {
       renderElement(portal, `cell--portal-${portal.pairId}`)
     })
 
-    // Отрисовка бонусов
     bonuses.forEach((bonus) => {
       renderElement(bonus, `cell--${bonus.type}`)
     })
 
-    // Отрисовка зон отравления
     poisonZones.forEach((zone) => {
       zone.cells.forEach((cell) => {
         renderElement(cell, "cell--poison")

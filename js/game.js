@@ -15,6 +15,7 @@ const { initializeBoard, updateViewportPosition, applyTheme, renderGame } = boar
 
 const { checkCollisions, findSafeSnakePosition, moveSnake } = snake
 
+// Инициализирует игру
 function initializeGame(GameState) {
   try {
     GameState.direction = "right"
@@ -29,18 +30,17 @@ function initializeGame(GameState) {
     GameState.poisonZones = []
     GameState.score.textContent = GameState.scoreCounter
     GameState.level.textContent = GameState.levelCounter
-    GameState.statusMessage.textContent = "Game started! Good luck!"
+    GameState.statusMessage.textContent = "Игра началась! Удачи!"
     GameState.activeBonuses.innerHTML = ""
 
     initializeBoard(GameState)
 
     generateWalls(GameState, 2 + Math.ceil(WALL_GENERATE_GROW_RATE * GameState.levelCounter))
-    generatePortals(GameState, 4) // 4 portals (2 pairs)
-    generatePoisonZones(GameState, 2) // 2 poison zones
+    generatePortals(GameState, 4)
+    generatePoisonZones(GameState, 2)
 
     const safePosition = findSafeSnakePosition(GameState)
 
-    // Reset snake to safe position
     GameState.snake = [
       { row: safePosition.row, col: safePosition.col },
       {
@@ -50,27 +50,24 @@ function initializeGame(GameState) {
       { row: safePosition.row, col: safePosition.col - 2 },
     ]
 
-    // Reset active bonuses
     GameState.activeBonusEffects = {
       speedUp: { active: false, endTime: 0 },
       speedDown: { active: false, endTime: 0 },
       inversion: { active: false, endTime: 0 },
     }
 
-    // Apply theme
     applyTheme(GameState)
 
-    // Generate food after other elements
     generateFood(GameState)
 
     renderGame(GameState)
     updateMinimap(GameState)
   } catch (error) {
-    console.error("Error initializing game:", error)
+    console.error("Ошибка при инициализации игры:", error)
   }
 }
 
-// Start the game
+// Запускает игру
 function startGame(GameState) {
   try {
     if (GameState.isGameRunning) {
@@ -86,7 +83,6 @@ function startGame(GameState) {
       GameState.overlay.container.classList.remove("hiding")
     }, 500)
 
-    // Start game loop
     if (GameState.gameInterval) {
       clearInterval(GameState.gameInterval)
     }
@@ -102,10 +98,11 @@ function startGame(GameState) {
       updateBonusEffects(GameState)
     }, GameState.gameSpeed)
   } catch (error) {
-    console.error("Error starting game:", error)
+    console.error("Ошибка при запуске игры:", error)
   }
 }
 
+// Завершает игру
 async function endGame(GameState, message) {
   try {
     if (GameState.gameInterval) {
@@ -115,36 +112,31 @@ async function endGame(GameState, message) {
 
     GameState.isGameRunning = false
 
-    // Load current high scores
     const highScores = await loadHighScores()
 
-    // Check if current score makes it to the high scores table
     const isNewHighScore = isHighScore(GameState.scoreCounter, highScores)
 
-    GameState.overlay.title.textContent = "Game Over"
-    GameState.overlay.message.textContent = message + ` Final score: ${GameState.scoreCounter}`
+    GameState.overlay.title.textContent = "Игра окончена"
+    GameState.overlay.message.textContent = message + ` Итоговый счет: ${GameState.scoreCounter}`
 
     if (isNewHighScore) {
-      // If it's a new high score, show the name input form
       showNameForm()
 
-      // Handler for the save button
       GameState.highScores.saveButton.onclick = async () => {
-        const playerName = GameState.highScores.input.value.trim() || "Player"
+        const playerName = GameState.highScores.input.value.trim() || "Игрок"
         const newScoreIndex = await addHighScore(playerName, GameState.scoreCounter, GameState.levelCounter)
         updateHighScoresTable(await loadHighScores(), newScoreIndex)
         hideNameForm()
       }
     } else {
-      // If it's not a new high score, just update the table
       updateHighScoresTable(highScores)
       hideNameForm()
     }
 
-    GameState.overlay.startButton.textContent = "Play Again"
+    GameState.overlay.startButton.textContent = "Играть снова"
     GameState.overlay.container.style.display = "flex"
   } catch (error) {
-    console.error("Error ending game:", error)
+    console.error("Ошибка при завершении игры:", error)
   }
 }
 

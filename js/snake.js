@@ -8,6 +8,7 @@ import { generateFood } from "./food.js"
 import { levelUp } from "./level.js"
 import { endGame } from "./game.js"
 
+// Перемещает змейку
 function moveSnake(gameState) {
   try {
     const { snake, nextDirection, portals, food } = gameState
@@ -40,7 +41,6 @@ function moveSnake(gameState) {
     const portalIndex = portals.findIndex((portal) => positionsEqual(portal, head))
 
     if (portalIndex !== -1) {
-      // Добавляем эффект активации портала
       const portalCell = document.querySelector(
         `.cell[data-row="${portals[portalIndex].row}"][data-col="${portals[portalIndex].col}"]`,
       )
@@ -51,7 +51,6 @@ function moveSnake(gameState) {
         }, 300)
       }
 
-      // Добавляем эффект активации портала на миникарте
       const portalMinimap = document.querySelector(`.game__minimap-portal-${portals[portalIndex].pairId}`)
       if (portalMinimap) {
         portalMinimap.classList.add("game__minimap-portal-active")
@@ -66,7 +65,6 @@ function moveSnake(gameState) {
       )
 
       if (otherPortalIndex !== -1) {
-        // Добавляем эффект активации второго портала
         const otherPortalCell = document.querySelector(
           `.cell[data-row="${portals[otherPortalIndex].row}"][data-col="${portals[otherPortalIndex].col}"]`,
         )
@@ -77,7 +75,6 @@ function moveSnake(gameState) {
           }, 300)
         }
 
-        // Добавляем эффект активации второго портала на миникарте
         const otherPortalMinimap = document.querySelector(`.game__minimap-portal-${portals[otherPortalIndex].pairId}`)
         if (otherPortalMinimap) {
           otherPortalMinimap.classList.add("game__minimap-portal-active")
@@ -89,7 +86,6 @@ function moveSnake(gameState) {
         head.row = portals[otherPortalIndex].row
         head.col = portals[otherPortalIndex].col
 
-        // Move one step in the current direction after teleportation
         switch (gameState.direction) {
           case "up":
             head.row--
@@ -113,39 +109,31 @@ function moveSnake(gameState) {
 
     snake.unshift(head)
 
-    // Проверяем, съела ли змейка еду
     if (food && positionsEqual(head, food)) {
-      // Анимация поедания еды
       const foodCell = document.querySelector(`.cell[data-row="${food.row}"][data-col="${food.col}"]`)
       if (foodCell) {
         foodCell.classList.add("food-eaten")
       }
 
-      // Увеличиваем счет
       gameState.scoreCounter += 10
       gameState.score.textContent = gameState.scoreCounter
 
-      // Проверяем на повышение уровня
       if (gameState.scoreCounter >= gameState.levelCounter * POINTS_PER_LEVEL) {
         levelUp(gameState)
       }
 
-      // Генерируем новую еду
       generateFood(gameState)
 
-      // Иногда генерируем бонусы
       if (Math.random() < 0.3) {
         generateBonus(gameState)
       }
 
-      // Перестройка карты
       if (gameState.scoreCounter % POINTS_PER_REGENERATE === 0) {
         regenerateWalls(gameState)
         generatePortals(gameState, 4)
         generatePoisonZones(gameState, 2)
       }
     } else {
-      // Удаляем хвост, если еда не была съедена
       snake.pop()
     }
   } catch (error) {
@@ -153,6 +141,7 @@ function moveSnake(gameState) {
   }
 }
 
+// Проверяет столкновения змейки
 function checkCollisions(gameState) {
   try {
     const { snake, walls, bonuses, poisonZones } = gameState
@@ -161,7 +150,6 @@ function checkCollisions(gameState) {
 
     const head = snake[0]
 
-    // Колизии змейки с собой
     for (let i = 1; i < snake.length; i++) {
       if (positionsEqual(snake[i], head)) {
         endGame(gameState, "Вы столкнулись с собой!")
@@ -169,10 +157,8 @@ function checkCollisions(gameState) {
       }
     }
 
-    // Колизии змейки со стенами
     for (const wall of walls) {
       if (positionsEqual(wall, head)) {
-        // Анимация столкновения со стеной
         const wallCell = document.querySelector(`.cell[data-row="${wall.row}"][data-col="${wall.col}"]`)
         if (wallCell) {
           wallCell.classList.add("wall-collision")
@@ -183,11 +169,9 @@ function checkCollisions(gameState) {
       }
     }
 
-    // Змейка собрала бонус
     for (let i = 0; i < bonuses.length; i++) {
       const bonus = bonuses[i]
       if (positionsEqual(bonus, head)) {
-        // Анимация сбора бонуса
         const bonusCell = document.querySelector(`.cell[data-row="${bonus.row}"][data-col="${bonus.col}"]`)
         if (bonusCell) {
           bonusCell.classList.add("bonus-collected")
@@ -199,9 +183,7 @@ function checkCollisions(gameState) {
       }
     }
 
-    // Проверка на зоны отравления
     for (const zone of poisonZones) {
-      // Проверяем, находится ли вся змейка в зоне отравления
       let allInZone = true
       for (const segment of snake) {
         let inCurrentZone = false
@@ -218,13 +200,12 @@ function checkCollisions(gameState) {
       }
 
       if (allInZone && snake.length > 0) {
-        // Анимация отравления змейки
         snake.forEach((segment, index) => {
           const segmentCell = document.querySelector(`.cell[data-row="${segment.row}"][data-col="${segment.col}"]`)
           if (segmentCell) {
             setTimeout(() => {
               segmentCell.classList.add("poison-effect")
-            }, index * 50) // Последовательная анимация для каждого сегмента
+            }, index * 50)
           }
         })
 
@@ -237,6 +218,7 @@ function checkCollisions(gameState) {
   }
 }
 
+// Находит безопасную позицию для змейки
 function findSafeSnakePosition(gameState) {
   try {
     const { MAX_GRID } = gameState
@@ -274,7 +256,6 @@ function findSafeSnakePosition(gameState) {
       }
     }
 
-    // Если все попытки не удались, используем жестко заданную безопасную позицию
     return { row: 5, col: 5 }
   } catch (error) {
     console.error("Ошибка при поиске безопасной позиции для змейки:", error)
@@ -282,6 +263,7 @@ function findSafeSnakePosition(gameState) {
   }
 }
 
+// Проверяет, находится ли позиция на пути змейки
 function isInSnakePath(gameState, position) {
   try {
     const { snake, direction } = gameState
@@ -292,7 +274,6 @@ function isInSnakePath(gameState, position) {
 
     const head = snake[0]
 
-    // Определяем опасную зону на основе направления змейки
     const dangerZone = []
 
     switch (direction) {
@@ -318,7 +299,6 @@ function isInSnakePath(gameState, position) {
         break
     }
 
-    // Проверяем, находится ли позиция в опасной зоне
     return dangerZone.some((zone) => positionsEqual(zone, position))
   } catch (error) {
     console.error("Ошибка при проверке пути змейки:", error)
@@ -326,26 +306,23 @@ function isInSnakePath(gameState, position) {
   }
 }
 
+// Проверяет, заблокирует ли змейку добавление новых стен
 function wouldTrapSnake(gameState, newWalls) {
   const { snake, walls } = gameState
   if (snake.length === 0) return false
 
-  // Создаем копию текущих стен плюс новые стены
   const allWalls = [...walls, ...newWalls]
 
-  // Создаем представление сетки
   const grid = Array(MAX_GRID.height)
     .fill(undefined)
     .map(() => Array(MAX_GRID.width).fill(0))
 
-  // Отмечаем стены как заблокированные
   allWalls.forEach((wall) => {
     if (wall.row >= 0 && wall.row < MAX_GRID.height && wall.col >= 0 && wall.col < MAX_GRID.width) {
       grid[wall.row][wall.col] = 1
     }
   })
 
-  // Отмечаем змейку как заблокированную (кроме головы)
   for (let i = 1; i < snake.length; i++) {
     const segment = snake[i]
     if (segment.row >= 0 && segment.row < MAX_GRID.height && segment.col >= 0 && segment.col < MAX_GRID.width) {
@@ -353,7 +330,6 @@ function wouldTrapSnake(gameState, newWalls) {
     }
   }
 
-  // Простой алгоритм заливки от головы змейки для проверки доступности
   const head = snake[0]
   const queue = [head]
   const visited = new Set()
@@ -362,16 +338,14 @@ function wouldTrapSnake(gameState, newWalls) {
   while (queue.length > 0) {
     const current = queue.shift()
 
-    // Проверяем все четыре направления
     const directions = [
-      { row: current.row - 1, col: current.col }, // вверх
-      { row: current.row + 1, col: current.col }, // вниз
-      { row: current.row, col: current.col - 1 }, // влево
-      { row: current.row, col: current.col + 1 }, // вправо
+      { row: current.row - 1, col: current.col },
+      { row: current.row + 1, col: current.col },
+      { row: current.row, col: current.col - 1 },
+      { row: current.row, col: current.col + 1 },
     ]
 
     for (const next of directions) {
-      // Обрабатываем зацикливание
       let nextRow = next.row
       let nextCol = next.col
 
@@ -382,7 +356,6 @@ function wouldTrapSnake(gameState, newWalls) {
 
       const key = `${nextRow},${nextCol}`
 
-      // Если не посещено и не стена
       if (
         !visited.has(key) &&
         (nextRow < 0 ||
@@ -397,7 +370,6 @@ function wouldTrapSnake(gameState, newWalls) {
     }
   }
 
-  // Если мы можем достичь хотя бы половины незаблокированных ячеек, змейка, вероятно, не заблокирована
   const totalCells = MAX_GRID.height * MAX_GRID.width
   const wallCount = allWalls.length + snake.length - 1
   const accessibleCells = visited.size

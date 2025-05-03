@@ -4,6 +4,7 @@ import { renderGame } from "./board.js"
 import { loadHighScores, updateHighScoresTable } from "./highscores.js"
 import { setupControls } from "./controls.js"
 
+// Инициализация игры при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
   const State = {
     board: document.getElementById("game-board"),
@@ -63,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupControls(State)
 
-  // Handle skin selection changes
   State.ui.skinSelect.addEventListener("change", () => {
     try {
       State.currentSkin = State.ui.skinSelect.value
@@ -71,13 +71,11 @@ document.addEventListener("DOMContentLoaded", () => {
         renderGame(State)
       }
     } catch (error) {
-      console.error("Error handling skin selection change:", error)
+      console.error("Ошибка при изменении скина:", error)
     }
   })
 
-  // Start button event listener
   State.overlay.startButton.addEventListener("click", startGame.bind(null, State))
 
-  // Инициализация таблицы лучших результатов при загрузке страницы
   updateHighScoresTable(loadHighScores())
 })

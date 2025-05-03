@@ -12,15 +12,25 @@
 .game {
   max-width: 100%;
   overflow-x: hidden;
+  /* Fixed size container for consistent game display */
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .game__board-container {
   max-width: 100%;
   overflow: hidden;
+  /* Fixed dimensions to maintain aspect ratio */
+  width: calc(var(--grid-size) * var(--visible-grid-width));
+  height: calc(var(--grid-size) * var(--visible-grid-height));
+  margin: 0 auto;
 }
 
 .game__board {
   max-width: 100%;
+  /* Ensure the board maintains its grid size */
+  width: calc(var(--grid-size) * var(--visible-grid-width));
+  height: calc(var(--grid-size) * var(--visible-grid-height));
 }
 
 /* Ensure controls are always visible */
@@ -28,4 +38,17 @@
   display: flex;
   margin-bottom: 20px;
   z-index: 10;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Status bar fixed size */
+.game__status {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Game header fixed size */
+.game__header {
+  width: 100%;
 }

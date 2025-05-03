@@ -1,5 +1,5 @@
+// Инициализирует интерфейс приложения
 document.addEventListener("DOMContentLoaded", () => {
-  // Navigation functionality
   const navLinks = document.querySelectorAll(".nav-link")
   const sections = document.querySelectorAll(".content-section")
 
@@ -7,29 +7,25 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", (e) => {
       e.preventDefault()
 
-      // Remove active class from all links and sections
       navLinks.forEach((l) => l.classList.remove("active"))
       sections.forEach((s) => s.classList.remove("active"))
 
-      // Add active class to clicked link
       link.classList.add("active")
 
-      // Show corresponding section
       const sectionId = link.getAttribute("data-section") + "-section"
       document.getElementById(sectionId).classList.add("active")
 
-      // Scroll to top when changing sections
       window.scrollTo(0, 0)
     })
   })
 
-  // Load high scores when results tab is clicked
+  // Загружает таблицу рекордов при переходе на вкладку результатов
   const resultsLink = document.querySelector('[data-section="results"]')
   resultsLink.addEventListener("click", () => {
     fetchHighScores()
   })
 
-  // Function to fetch high scores from the server
+  // Загружает рекорды с сервера
   async function fetchHighScores() {
     const highScoresBody = document.getElementById("highscores-body")
 
@@ -37,35 +33,33 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/api/highscores")
 
       if (!response.ok) {
-        throw new Error("Failed to fetch high scores")
+        throw new Error("Не удалось загрузить рекорды")
       }
 
       const highScores = await response.json()
 
-      // Clear loading message
       highScoresBody.innerHTML = ""
 
       if (highScores.length === 0) {
         const row = document.createElement("tr")
         const cell = document.createElement("td")
         cell.colSpan = 5
-        cell.textContent = "No high scores yet"
+        cell.textContent = "Пока нет рекордов"
         cell.style.textAlign = "center"
         row.appendChild(cell)
         highScoresBody.appendChild(row)
         return
       }
 
-      // Add high scores to the table
       highScores.forEach((score, index) => {
         const row = document.createElement("tr")
 
         const cells = [
-          index + 1, // Rank
-          score.name, // Name
-          score.score, // Score
-          score.level, // Level
-          new Date(score.date).toLocaleDateString(), // Date
+          index + 1, // Место
+          score.name, // Имя
+          score.score, // Очки
+          score.level, // Уровень
+          new Date(score.date).toLocaleDateString(), // Дата
         ]
 
         cells.forEach((content) => {
@@ -77,11 +71,11 @@ document.addEventListener("DOMContentLoaded", () => {
         highScoresBody.appendChild(row)
       })
     } catch (error) {
-      console.error("Error fetching high scores:", error)
+      console.error("Ошибка при загрузке рекордов:", error)
       highScoresBody.innerHTML = `
                 <tr>
                     <td colspan="5" style="text-align: center; color: #f44336;">
-                        Failed to load high scores. Please try again later.
+                        Не удалось загрузить рекорды. Пожалуйста, попробуйте позже.
                     </td>
                 </tr>
             `
