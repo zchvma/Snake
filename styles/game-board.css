@@ -1,6 +1,6 @@
 /* Контейнер игрового поля */
 .game__board-container {
-  flex: 1;
+  flex: 1 0 auto;
   position: relative;
   overflow: hidden;
   display: flex;
