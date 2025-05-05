@@ -1,19 +1,19 @@
 /* Контейнер игрового поля */
 .game__board-container {
-  flex: 1;
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 2em;
+  height: fit-content;
 }
 
 .game__board {
   display: grid;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: var(--border-radius);
-  transition: background 0.5s ease; /* Изменено: убрана трансформация для предотвращения пульсации */
+  transition: background 0.5s ease;
 }
 
 /* Стили ячеек */

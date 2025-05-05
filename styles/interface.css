@@ -1,37 +1,29 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "Arial", sans-serif;
-  background-color: #121212;
-  color: var(--text-color);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Header Styles */
 .app-header {
   background-color: var(--header-bg);
-  padding: 1rem 2rem;
+  padding: 1em 2em;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.1em 1em rgba(0, 0, 0, 0.3);
   z-index: 100;
+  box-sizing: border-box;
 }
 
 .logo h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   color: var(--menu-hover);
-  text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+  text-shadow: 0 0 1em rgba(76, 175, 80, 0.3);
 }
 
 .main-nav ul {
@@ -39,15 +31,15 @@ body {
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 1.5rem;
+  gap: 1.5em;
 }
 
 .nav-link {
   color: var(--text-color);
   text-decoration: none;
   font-weight: bold;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.5em 1em;
+  border-radius: 0.1em;
   transition: all 0.3s ease;
 }
 
@@ -63,19 +55,26 @@ body {
 /* Main Content Styles */
 .app-content {
   flex: 1;
-  padding: 1rem;
+  padding: 1em;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  box-sizing: border-box;
+  min-height: 0;
+}
+
+.overflow-scroll {
   overflow-y: auto;
 }
 
 .content-section {
   display: none;
-  width: 100%;
-  max-width: 1200px;
+  height: fit-content;
+  width: 50vw;
   margin: 0 auto;
+  overflow: visible;
+  box-sizing: border-box;
 }
 
 .content-section.active {
@@ -85,17 +84,17 @@ body {
 /* About Section Styles */
 .about-container {
   background-color: var(--section-bg);
-  border-radius: 8px;
-  padding: 2rem;
-  margin: 1rem 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 0.5em;
+  padding: 2em;
+  margin: 1em 0;
+  box-shadow: 0 0.1em 2em rgba(0, 0, 0, 0.3);
 }
 
 .about-container h2 {
   color: var(--menu-hover);
   margin-top: 0;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0.5rem;
+  border-bottom: 0.05em solid var(--border-color);
+  padding-bottom: 0.5em;
 }
 
 .about-content {
@@ -104,50 +103,50 @@ body {
 
 .about-content h3 {
   color: var(--menu-hover);
-  margin-top: 1.5rem;
+  margin-top: 1.5em;
 }
 
 .about-content ul {
-  margin-left: 1.5rem;
+  margin-left: 1.5em;
 }
 
 .about-content li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.5em;
 }
 
 .source-note {
   font-style: italic;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   color: rgba(255, 255, 255, 0.7);
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 0.05em solid var(--border-color);
 }
 
 /* Results Section Styles */
 .results-container {
   background-color: var(--section-bg);
-  border-radius: 8px;
-  padding: 2rem;
-  margin: 1rem 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 0.5em;
+  padding: 2em;
+  margin: 1em 0;
+  box-shadow: 0 0.1em 2em rgba(0, 0, 0, 0.3);
 }
 
 .results-container h2 {
   color: var(--menu-hover);
   margin-top: 0;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0.5rem;
+  border-bottom: 0.05em solid var(--border-color);
+  padding-bottom: 0.5em;
 }
 
 .highscores-container {
   overflow-x: auto;
-  margin-top: 1rem;
+  margin-top: 1em;
 }
 
 .loading-scores {
   text-align: center;
-  padding: 1rem;
+  padding: 1em;
   font-style: italic;
   color: rgba(255, 255, 255, 0.7);
 }
@@ -155,9 +154,11 @@ body {
 /* Footer Styles */
 .app-footer {
   background-color: var(--footer-bg);
-  padding: 1rem 2rem;
+  padding: 1em 2em;
   text-align: center;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 -0.1em 1em rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .app-footer a {
@@ -173,32 +174,20 @@ body {
 @media (max-width: 768px) {
   .app-header {
     flex-direction: column;
-    padding: 1rem;
   }
 
   .logo {
-    margin-bottom: 1rem;
-  }
-
-  .main-nav ul {
-    gap: 0.5rem;
+    margin-bottom: 1em;
   }
 
   .nav-link {
-    padding: 0.3rem 0.7rem;
-    font-size: 0.9rem;
+    padding: 0.3em 0.7em;
+    font-size: 0.9em;
   }
 
+  .app-header,
   .about-container,
   .results-container {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-nav ul {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
+    padding: 1em;
   }
 }

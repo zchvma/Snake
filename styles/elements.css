@@ -13,7 +13,7 @@
   height: 60%;
   background-color: var(--color-accent);
   border-radius: 50%;
-  box-shadow: 0 0 15px rgba(255, 87, 34, 0.7);
+  box-shadow: 0 0 calc(var(--grid-size) / 2) rgba(255, 87, 34, 0.7);
   animation: pulse 1s infinite alternate;
 }
 
@@ -24,7 +24,7 @@
 /* Стили для стен */
 .cell--wall {
   background-color: var(--color-wall);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 calc(var(--grid-size) / 4) rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
@@ -50,17 +50,17 @@
 
 .cell--portal-1::after {
   background-color: var(--color-portal);
-  box-shadow: 0 0 20px rgba(156, 39, 176, 0.8);
+  box-shadow: 0 0 calc(var(--grid-size) / 2) rgba(156, 39, 176, 0.8);
 }
 
 .cell--portal-2::after {
   background-color: #2196f3;
-  box-shadow: 0 0 20px rgba(33, 150, 243, 0.8);
+  box-shadow: 0 0 calc(var(--grid-size) / 2) rgba(33, 150, 243, 0.8);
 }
 
 .cell--portal-3::after {
   background-color: #ff9800;
-  box-shadow: 0 0 20px rgba(255, 152, 0, 0.8);
+  box-shadow: 0 0 calc(var(--grid-size) / 2) rgba(255, 152, 0, 0.8);
 }
 
 /* Эффект активации портала */

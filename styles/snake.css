@@ -2,7 +2,7 @@
 .cell--snake {
   background-color: var(--color-primary);
   border-radius: calc(var(--grid-size) * 0.1);
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+  box-shadow: 0 0 calc(var(--grid-size) / 4) rgba(76, 175, 80, 0.5);
   transition: var(--snake-transition);
   transform-origin: center;
 }
@@ -10,7 +10,7 @@
 .cell--snake-head {
   background-color: var(--color-secondary);
   border-radius: calc(var(--grid-size) * 0.15);
-  box-shadow: 0 0 15px rgba(56, 142, 60, 0.7);
+  box-shadow: 0 0 calc(var(--grid-size) / 3) rgba(56, 142, 60, 0.7);
   transition: var(--snake-transition);
   transform-origin: center;
 }
@@ -37,20 +37,20 @@
   background: repeating-linear-gradient(
     45deg,
     var(--color-primary),
-    var(--color-primary) 10px,
-    var(--color-secondary) 10px,
-    var(--color-secondary) 20px
+    var(--color-primary) calc(var(--grid-size) / 4),
+    var(--color-secondary) calc(var(--grid-size) / 4),
+    var(--color-secondary) calc(var(--grid-size) / 2)
   );
 }
 
 .cell--snake.cell--fire {
   background: linear-gradient(to right, #ff9800, #f44336);
-  box-shadow: 0 0 15px rgba(255, 87, 34, 0.7);
+  box-shadow: 0 0 calc(var(--grid-size) / 3) rgba(255, 87, 34, 0.7);
 }
 
 .cell--snake.cell--ice {
   background: linear-gradient(to right, #2196f3, #03a9f4);
-  box-shadow: 0 0 15px rgba(33, 150, 243, 0.7);
+  box-shadow: 0 0 calc(var(--grid-size) / 3) rgba(33, 150, 243, 0.7);
 }
 
 /* Переход для сегментов змейки */

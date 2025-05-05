@@ -1,8 +1,8 @@
 /* Мини-карта */
 .game__minimap-container {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 5%;
+  right: 5%;
   width: var(--minimap-size);
   height: var(--minimap-size);
   background-color: rgba(0, 0, 0, 0.7);
@@ -46,14 +46,14 @@
 
 .game__minimap-viewport {
   position: absolute;
-  border: 2px solid white;
+  border: calc(var(--grid-size) / 4) solid white;
   background-color: rgba(255, 255, 255, 0.1);
   transition: left 0.3s ease, top 0.3s ease;
 }
 
 .game__minimap-boundary {
   position: absolute;
-  border: 1px dashed rgba(255, 255, 255, 0.5);
+  border: calc(var(--grid-size) / 8) dashed rgba(255, 255, 255, 0.5);
   background-color: transparent;
 }
 

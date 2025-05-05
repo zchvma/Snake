@@ -110,6 +110,11 @@ async function endGame(GameState, message) {
       GameState.gameInterval = null
     }
 
+    GameState.board.innerHTML = ""
+    GameState.board.style.gridTemplateColumns = ""
+    GameState.board.style.gridTemplateRows = ""
+    console.log(GameState.board.innerHTML)
+    console.log(1)
     GameState.isGameRunning = false
 
     const highScores = await loadHighScores()

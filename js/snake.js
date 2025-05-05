@@ -152,8 +152,8 @@ function checkCollisions(gameState) {
 
     for (let i = 1; i < snake.length; i++) {
       if (positionsEqual(snake[i], head)) {
-        endGame(gameState, "Вы столкнулись с собой!")
-        return
+        endGame(gameState, "Вы столкнулись с собой!").then();
+        return;
       }
     }
 
@@ -164,8 +164,8 @@ function checkCollisions(gameState) {
           wallCell.classList.add("wall-collision")
         }
 
-        endGame(gameState, "Вы врезались в стену!")
-        return
+        endGame(gameState, "Вы врезались в стену!").then();
+        return;
       }
     }
 
@@ -209,8 +209,8 @@ function checkCollisions(gameState) {
           }
         })
 
-        endGame(gameState, "Ваша змейка полностью отравлена!")
-        return
+        endGame(gameState, "Ваша змейка полностью отравлена!").then();
+        return;
       }
     }
   } catch (error) {

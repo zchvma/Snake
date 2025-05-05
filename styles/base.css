@@ -1,8 +1,9 @@
 /* Корневые переменные */
 :root {
-  --grid-size: 40px; /* В 4 раза больше, как запрошено */
-  --control-button-size: 80px;
-  --control-button-font-size: 20px;
+  --grid-size: 2vw;
+  --control-button-size: calc(var(--grid-size) * 2);
+  --control-button-font-size: calc(var(--grid-size) / 2);
+  --font-size: 1vw;
   --grid-columns: 20;
   --grid-rows: 20;
   --color-primary: #4caf50;
@@ -18,10 +19,10 @@
   --color-inversion: #e91e63;
   --color-poison: #8bc34a;
   --color-overlay: rgba(0, 0, 0, 0.85);
-  --border-radius: 8px;
+  --border-radius: 0.2em;
   --transition-speed: 0.3s;
-  --minimap-size: 200px; /* Увеличено с 150px до 200px */
-  --minimap-border: 2px;
+  --minimap-size: calc(var(--grid-size) / 2 * 10);
+  --minimap-border: 0.1em;
   --snake-transition: transform 0.15s ease, background-color 0.2s ease;
 
   --header-bg: #1a1a1a;
@@ -45,15 +46,21 @@
 
 /* Базовые стили */
 body {
+  margin: 0;
+  padding: 0;
   font-family: "Arial", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: var(--color-background);
   color: var(--color-text);
   overflow: hidden;
   height: 100vh;
   width: 100vw;
-  display: flex;
   justify-content: center;
   align-items: center;
+  font-size: var(--font-size);
+  box-sizing: border-box;
 }
 
 /* Контейнер игры */
@@ -62,10 +69,9 @@ body {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: 20px;
+  /*padding: 1.5em;*/
   position: relative;
-  min-height: 100vh;
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 /* Заголовок игры */
@@ -73,10 +79,10 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 0.5em;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius);
-  margin-bottom: 20px;
+  margin-bottom: 1em;
   z-index: 2;
 }
 
@@ -90,13 +96,13 @@ body {
 .game__score-label,
 .game__level-label,
 .game__skin-label {
-  margin-right: 5px;
+  margin-right: 0.2em;
   font-weight: bold;
 }
 
 .game__score-value,
 .game__level-value {
-  font-size: 1.2em;
+  margin-right: 0.2em;
   font-weight: bold;
 }
 
@@ -104,7 +110,12 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
   color: var(--color-text);
   border: none;
-  padding: 5px 10px;
+  padding: 0.5em 1em;
   border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: var(--font-size);
+}
+
+.game__skin-option {
   cursor: pointer;
 }

@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.5em;
   z-index: 2;
 }
 
@@ -15,11 +15,11 @@
 .game__control-button {
   width: var(--control-button-size);
   height: var(--control-button-size);
-  margin: 5px;
+  margin: 0.5em;
   font-size: var(--control-button-font-size);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   color: var(--color-text);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 0.1em solid rgba(255, 255, 255, 0.2);
   border-radius: var(--border-radius);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -40,20 +40,17 @@
 
 /* Статус игры */
 .game__status {
-  padding: 10px;
+  padding: 1em;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius);
   text-align: center;
   z-index: 2;
 
   position: relative;
-  bottom: 10px;
-
-  margin-bottom: 300px;
+  bottom: 1em;
 }
 
 .game__status-message {
-  margin-bottom: 10px;
   font-weight: bold;
 }
 
@@ -65,10 +62,10 @@
 
 /* Индикаторы бонусов */
 .game__bonus-indicator {
-  padding: 5px 10px;
-  margin: 5px;
-  border-radius: 15px;
-  font-size: 14px;
+  padding: 0.5em 1em;
+  margin: 0.5em;
+  border-radius: 10.5em;
+  font-size: 1.5em;
   color: white;
   font-weight: bold;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -85,7 +82,7 @@
 }
 
 .game__bonus-indicator.removing {
-  transform: translateY(-10px);
+  transform: translateY(-1em);
   opacity: 0;
 }
 
@@ -106,12 +103,12 @@
 
 .game__overlay-content {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-  padding: 40px;
+  padding: 2em;
   border-radius: var(--border-radius);
   text-align: center;
   max-width: 90%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 0.1em solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.3);
   transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -125,18 +122,18 @@
 
 .game__overlay-title {
   font-size: 2.5em;
-  margin-bottom: 20px;
+  margin-bottom: 1em;
   color: var(--color-primary);
-  text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+  text-shadow: 0 0 1em rgba(76, 175, 80, 0.5);
 }
 
 .game__overlay-message {
   font-size: 1.2em;
-  margin-bottom: 30px;
+  margin-bottom: 2em;
 }
 
 .game__start-button {
-  padding: 15px 30px;
+  padding: 0.7em 1.5em;
   background: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
   color: white;
   border: none;
@@ -145,32 +142,32 @@
   font-size: 1.2em;
   font-weight: bold;
   transition: all 0.2s ease;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.2);
 }
 
 .game__start-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-0.1em);
+  box-shadow: 0 0.2em 1.5em rgba(0, 0, 0, 0.3);
 }
 
 .game__start-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(0.05em);
+  box-shadow: 0 0.1em 1em rgba(0, 0, 0, 0.2);
 }
 
 /* Стили для таблицы лучших результатов */
 .game__highscores {
-  margin-bottom: 20px;
-  max-height: 300px;
+  margin-bottom: 1.5em;
+  max-height: 20em;
   overflow-y: auto;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: var(--border-radius);
-  padding: 10px;
+  padding: 1em;
 }
 
 .game__highscores-title {
   font-size: 1.5em;
-  margin-bottom: 10px;
+  margin-bottom: 1em;
   color: var(--color-primary);
 }
 
@@ -182,9 +179,9 @@
 
 .game__highscores-table th,
 .game__highscores-table td {
-  padding: 8px;
+  padding: 0.2em;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 0.05em solid rgba(255, 255, 255, 0.2);
 }
 
 .game__highscores-table th {
@@ -202,8 +199,8 @@
 
 /* Стили для формы ввода имени */
 .game__name-form {
-  margin: 20px 0;
-  padding: 15px;
+  margin: 1.5em 0;
+  padding: 1em;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: var(--border-radius);
 }
@@ -211,8 +208,9 @@
 .game__name-input-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 0.5em;
+  margin-top: 0.5em;
+  font-size: 0.8em;
 }
 
 .game__name-input-container label {
@@ -220,15 +218,19 @@
 }
 
 .game__name-input-container input {
-  padding: 8px;
+  padding: 0.2em;
   border-radius: var(--border-radius);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 0.05em solid rgba(255, 255, 255, 0.3);
   background-color: rgba(0, 0, 0, 0.2);
   color: var(--color-text);
 }
 
+.game__input-font {
+  font-size: 1em;
+}
+
 .game__save-button {
-  padding: 8px 15px;
+  padding: 0.2em 0.7em;
   background: linear-gradient(145deg, var(--color-primary), var(--color-secondary));
   color: white;
   border: none;
@@ -236,15 +238,16 @@
   cursor: pointer;
   font-weight: bold;
   transition: all 0.2s ease;
+  font-size: 1.2em;
 }
 
 .game__save-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-0.1em);
+  box-shadow: 0 0.5em 10.5em rgba(0, 0, 0, 0.2);
 }
 
 .game__save-button:active {
-  transform: translateY(1px);
+  transform: translateY(0.05em);
 }
 
 /* Стили для выделения нового рекорда */
