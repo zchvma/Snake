@@ -1,15 +1,16 @@
 /* Корневые переменные */
 :root {
-  --grid-size: 2vw;
+  --grid-size: min(4vw, 4vh);
   --control-button-size: calc(var(--grid-size) * 2);
   --control-button-font-size: calc(var(--grid-size) / 2);
-  --font-size: 1vw;
+  --font-size: calc(var(--grid-size) / 2);
   --grid-columns: 20;
   --grid-rows: 20;
   --color-primary: #4caf50;
   --color-secondary: #388e3c;
   --color-accent: #ff5722;
   --color-background: #1a1a1a;
+  --background-size: calc(var(--grid-size) * 5);
   --color-text: #ffffff;
   --color-wall: #795548;
   --color-portal: #9c27b0;
@@ -110,12 +111,26 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
   color: var(--color-text);
   border: none;
-  padding: 0.5em 1em;
+  padding: 0.5em 1.5em 0.5em 0.5em;
   border-radius: var(--border-radius);
   cursor: pointer;
   font-size: var(--font-size);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* Добавляем свою стрелку */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'><path fill='white' d='M0 0l6 6 6-6z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.5em center;
+  background-size: 0.6em auto;
+}
+
+.game__skin-select::-ms-expand {
+  display: none;
 }
 
 .game__skin-option {
   cursor: pointer;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }

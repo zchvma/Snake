@@ -75,8 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         highScores.forEach((score, index) => {
             const row = document.createElement("tr")
 
-            const cells = [
-                index + 1, // Место
+            const cells = [index + 1, // Место
                 score.name, // Имя
                 score.score, // Очки
                 score.level, // Уровень
@@ -99,9 +98,26 @@ document.addEventListener("DOMContentLoaded", () => {
         //     return;
         // }
 
-        const width_view_points = getComputedStyle(document.documentElement).getPropertyValue('--grid-size').trim();
-        const newSize = (parseFloat(width_view_points) * window.innerWidth) / 100;
-        State.baseGridSize = Number(newSize);
+        const tempEl = document.createElement('div');
+        tempEl.style.cssText = `
+            position: absolute;
+            visibility: hidden;
+            width: var(--grid-size);
+            height: var(--grid-size);
+        `;
+
+        // Добавляем элемент в DOM
+        document.body.appendChild(tempEl);
+
+        // Получаем вычисленную ширину
+        const computedValue = tempEl.getBoundingClientRect().width;
+
+        // Удаляем элемент
+        document.body.removeChild(tempEl);
+
+        // const width_view_points = getComputedStyle(document.documentElement).getPropertyValue('--grid-size').trim();
+        // const newSize = (parseFloat(width_view_points) * window.innerWidth) / 100;
+        State.baseGridSize = computedValue;
     }
 
     window.addEventListener('resize', adjustLayout);
