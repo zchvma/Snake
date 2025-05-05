@@ -20,7 +20,7 @@
 .cell {
   width: var(--grid-size);
   height: var(--grid-size);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: calc(var(--grid-size) / 40) solid rgba(255, 255, 255, 0.1);
   position: relative;
   transition: background-color 0.2s ease;
 }

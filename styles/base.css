@@ -19,10 +19,10 @@
   --color-inversion: #e91e63;
   --color-poison: #8bc34a;
   --color-overlay: rgba(0, 0, 0, 0.85);
-  --border-radius: 0.2em;
+  --border-radius: calc(var(--grid-size) / 8);
   --transition-speed: 0.3s;
   --minimap-size: calc(var(--grid-size) / 2 * 10);
-  --minimap-border: 0.1em;
+  --minimap-border: calc(var(--grid-size) / 16);
   --snake-transition: transform 0.15s ease, background-color 0.2s ease;
 
   --header-bg: #1a1a1a;

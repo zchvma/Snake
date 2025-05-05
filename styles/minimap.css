@@ -46,14 +46,14 @@
 
 .game__minimap-viewport {
   position: absolute;
-  border: calc(var(--grid-size) / 4) solid white;
+  border: var(--minimap-border) solid white;
   background-color: rgba(255, 255, 255, 0.1);
   transition: left 0.3s ease, top 0.3s ease;
 }
 
 .game__minimap-boundary {
   position: absolute;
-  border: calc(var(--grid-size) / 8) dashed rgba(255, 255, 255, 0.5);
+  border: var(--minimap-border) dashed rgba(255, 255, 255, 0.5);
   background-color: transparent;
 }
 

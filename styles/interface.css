@@ -17,10 +17,11 @@
   box-shadow: 0 0.1em 1em rgba(0, 0, 0, 0.3);
   z-index: 100;
   box-sizing: border-box;
+  flex-direction: column;
 }
 
-.logo h1 {
-  margin: 0;
+.logo p {
+  margin-bottom: 0.5em;
   font-size: 1.5em;
   color: var(--menu-hover);
   text-shadow: 0 0 1em rgba(76, 175, 80, 0.3);
@@ -168,26 +169,4 @@
 
 .app-footer a:hover {
   text-decoration: underline;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .app-header {
-    flex-direction: column;
-  }
-
-  .logo {
-    margin-bottom: 1em;
-  }
-
-  .nav-link {
-    padding: 0.3em 0.7em;
-    font-size: 0.9em;
-  }
-
-  .app-header,
-  .about-container,
-  .results-container {
-    padding: 1em;
-  }
 }
