@@ -15,6 +15,7 @@ async function loadHighScores() {
 
     // Fallback to localStorage
     const highScores = localStorage.getItem(HIGH_SCORES_KEY)
+    localStorage.clear();
     return highScores ? JSON.parse(highScores) : []
   } catch (error) {
     console.error("Error loading high scores:", error)
