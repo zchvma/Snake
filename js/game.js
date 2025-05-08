@@ -117,7 +117,7 @@ async function endGame(GameState, message) {
 
     const highScores = await loadHighScores()
 
-    const isNewHighScore = isHighScore(GameState.scoreCounter, highScores)
+    const isNewHighScore = isHighScore(playerName, GameState.scoreCounter, highScores)
 
     GameState.overlay.title.textContent = "Игра окончена"
     GameState.overlay.message.textContent = message + ` Итоговый счет: ${GameState.scoreCounter}`

@@ -73,11 +73,11 @@ function updateHighScoresTable(highScores, newScoreIndex = -1) {
     }
 
     const cells = [
-      index + 1, // Номер
-      score.name || "Player", // Имя
-      score.score || 0, // Очки
-      score.level || 1, // Уровень
-      new Date(score.date || Date.now()).toLocaleDateString(), // Дата
+      index + 1, // Rank
+      score.name || "Player", // Name
+      score.score || 0, // Score
+      score.level || 1, // Level
+      new Date(score.date || Date.now()).toLocaleDateString(), // Date
     ]
 
     cells.forEach((content) => {
@@ -90,33 +90,27 @@ function updateHighScoresTable(highScores, newScoreIndex = -1) {
   })
 }
 
-function isHighScore(currentScore, highScores) {
+function isHighScore(playerName, currentScore, highScores) {
   // Убедимся, что highScores - это массив
   if (!Array.isArray(highScores)) {
     console.error("highScores is not an array in isHighScore:", highScores)
     return true
   }
 
-  // If the table is not full, the result will definitely be included
-  if (highScores.length < MAX_HIGH_SCORES) return true
+  const player_index = highScores.findIndex((score) => score.name === playerName)
 
-  // Otherwise, check if the result is greater than the minimum in the table
-  const minScore = Math.min(...highScores.map((score) => score.score || 0))
+  if (highScores.length < MAX_HIGH_SCORES && player_index !== -1) {
+    return true
+  }
+
+  const minScore = player_index !== -1 ? highScores[player_index].score : Math.min(...highScores.map((score) => score.score || 0))
   return currentScore > minScore
 }
 
 async function addHighScore(playerName, playerScore, playerLevel) {
   try {
-    // Load current high scores
     let highScores = await loadHighScores()
 
-    // Убедимся, что highScores - это массив
-    if (!Array.isArray(highScores)) {
-      console.error("highScores is not an array in addHighScore:", highScores)
-      highScores = []
-    }
-
-    // Create a new record
     const newScore = {
       name: playerName || "Player",
       score: playerScore,
@@ -124,22 +118,23 @@ async function addHighScore(playerName, playerScore, playerLevel) {
       date: Date.now(),
     }
 
-    // Add new score
-    highScores.push(newScore)
+    // Если пользователь уже имел рекорд, то обновляем его
+    const old_player_index = highScores.findIndex((score) => score.name === newScore.name)
 
-    // Sort by descending score
+    if (old_player_index !== -1) {
+      // Предполагается, что то, что мы добавляем лучше старого рекорда
+      highScores[old_player_index].score = newScore.score
+      highScores[old_player_index].level = newScore.level
+    } else {
+      highScores.push(newScore)
+    }
+
+
     highScores.sort((a, b) => (b.score || 0) - (a.score || 0))
-
-    // Keep only MAX_HIGH_SCORES records
     highScores = highScores.slice(0, MAX_HIGH_SCORES)
-
-    // Save updated high scores
     await saveHighScores(highScores)
 
-    // Return index of new score
-    return highScores.findIndex(
-        (score) => score.name === newScore.name && score.score === newScore.score && score.date === newScore.date,
-    )
+    return highScores.findIndex((score) => score.name === newScore.name)
   } catch (error) {
     console.error("Error adding new high score:", error)
     return -1
