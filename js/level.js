@@ -17,8 +17,8 @@ function levelUp(gameState) {
       gameState.board.style.transform = "scale(1)"
       gameState.board.style.filter = "brightness(1)"
 
-      gameState.gameSpeed = calculateBaseSpeed()
-      updateGameInterval()
+      gameState.gameSpeed = calculateBaseSpeed(gameState)
+      updateGameInterval(gameState)
 
       generateWalls(Math.ceil(WALL_GENERATE_GROW_RATE))
 

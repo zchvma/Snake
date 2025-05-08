@@ -221,8 +221,7 @@ function checkCollisions(gameState) {
 // Находит безопасную позицию для змейки
 function findSafeSnakePosition(gameState) {
   try {
-    const { MAX_GRID } = gameState
-
+    // Используем MAX_GRID из импорта, а не из gameState
     const centerArea = {
       minRow: Math.floor(MAX_GRID.height * 0.4),
       maxRow: Math.floor(MAX_GRID.height * 0.6),
@@ -230,36 +229,106 @@ function findSafeSnakePosition(gameState) {
       maxCol: Math.floor(MAX_GRID.width * 0.6),
     }
 
+    // Сначала пытаемся найти позицию в центральной области
     for (let attempts = 0; attempts < 50; attempts++) {
       const row = getRandomInt(centerArea.minRow, centerArea.maxRow)
       const col = getRandomInt(centerArea.minCol, centerArea.maxCol)
 
+      // Проверяем, что позиция безопасна для всех трех начальных сегментов змейки
       if (
-        isPositionSafe(gameState, { row, col }) &&
-        isPositionSafe(gameState, { row, col: col - 1 }) &&
-        isPositionSafe(gameState, { row, col: col - 2 })
+          isPositionSafe(gameState, { row, col }) &&
+          isPositionSafe(gameState, { row, col: col - 1 }) &&
+          isPositionSafe(gameState, { row, col: col - 2 })
       ) {
         return { row, col }
       }
     }
 
+    // Если не нашли в центре, ищем по всему полю
     for (let attempts = 0; attempts < 100; attempts++) {
       const row = getRandomInt(0, MAX_GRID.height - 1)
       const col = getRandomInt(0, MAX_GRID.width - 1)
 
+      // Проверяем, что позиция безопасна для всех трех начальных сегментов змейки
       if (
-        isPositionSafe(gameState, { row, col }) &&
-        isPositionSafe(gameState, { row, col: col - 1 }) &&
-        isPositionSafe(gameState, { row, col: col - 2 })
+          isPositionSafe(gameState, { row, col }) &&
+          isPositionSafe(gameState, { row, col: col - 1 }) &&
+          isPositionSafe(gameState, { row, col: col - 2 })
       ) {
         return { row, col }
       }
     }
 
-    return { row: 5, col: 5 }
+    // Если все попытки не удались, используем фиксированную безопасную позицию
+    // Проверяем каждую позицию в сетке, начиная с верхнего левого угла
+    for (let row = 0; row < MAX_GRID.height; row++) {
+      for (let col = 0; col < MAX_GRID.width; col++) {
+        if (
+            isPositionSafe(gameState, { row, col }) &&
+            col + 2 < MAX_GRID.width &&
+            isPositionSafe(gameState, { row, col: col + 1 }) &&
+            isPositionSafe(gameState, { row, col: col + 2 })
+        ) {
+          return { row, col }
+        }
+      }
+    }
+
+    // Если совсем ничего не нашли, используем фиксированную позицию и очищаем область
+    const defaultPosition = { row: 5, col: 5 }
+
+    // Очищаем область вокруг фиксированной позиции
+    const clearArea = (position) => {
+      // Удаляем стены, порталы, бонусы и яды в этой области
+      gameState.walls = gameState.walls.filter(
+          (wall) => Math.abs(wall.row - position.row) > 2 || Math.abs(wall.col - position.col) > 2,
+      )
+
+      gameState.portals = gameState.portals.filter(
+          (portal) => Math.abs(portal.row - position.row) > 2 || Math.abs(portal.col - position.col) > 2,
+      )
+
+      gameState.bonuses = gameState.bonuses.filter(
+          (bonus) => Math.abs(bonus.row - position.row) > 2 || Math.abs(bonus.col - position.col) > 2,
+      )
+
+      // Очищаем ядовитые зоны
+      gameState.poisonZones.forEach((zone) => {
+        zone.cells = zone.cells.filter(
+            (cell) => Math.abs(cell.row - position.row) > 2 || Math.abs(cell.col - position.col) > 2,
+        )
+      })
+
+      // Удаляем пустые зоны яда
+      gameState.poisonZones = gameState.poisonZones.filter((zone) => zone.cells.length > 0)
+    }
+
+    clearArea(defaultPosition)
+    return defaultPosition
   } catch (error) {
     console.error("Ошибка при поиске безопасной позиции для змейки:", error)
-    return { row: 5, col: 5 }
+
+    // В случае ошибки, возвращаем фиксированную позицию и очищаем область
+    const emergencyPosition = { row: 5, col: 5 }
+
+    try {
+      // Очищаем область вокруг фиксированной позиции
+      gameState.walls = gameState.walls.filter(
+          (wall) => Math.abs(wall.row - emergencyPosition.row) > 2 || Math.abs(wall.col - emergencyPosition.col) > 2,
+      )
+
+      gameState.poisonZones.forEach((zone) => {
+        if (zone && zone.cells) {
+          zone.cells = zone.cells.filter(
+              (cell) => Math.abs(cell.row - emergencyPosition.row) > 2 || Math.abs(cell.col - emergencyPosition.col) > 2,
+          )
+        }
+      })
+    } catch (clearError) {
+      console.error("Ошибка при очистке области для аварийного спавна:", clearError)
+    }
+
+    return emergencyPosition
   }
 }
 

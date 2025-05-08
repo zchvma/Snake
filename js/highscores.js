@@ -27,7 +27,7 @@ async function saveHighScores(highScores) {
   try {
     // Save to localStorage as fallback
     localStorage.setItem(HIGH_SCORES_KEY, JSON.stringify(highScores))
-    // localStorage.clear();
+    localStorage.clear();
 
     // Try to save to server
     try {
