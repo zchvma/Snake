@@ -10,9 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault()
 
             const sectionId = link.getAttribute("data-section") + "-section"
-            if (sectionId !== "game-section" && document.getElementById("game-section").classList.contains("active") && State.isGameRunning) {
+            if (sectionId !== "game-section" && document.getElementById("game-section").classList.contains("active")) {
                 document.getElementsByClassName("app-content")[0].classList.add("overflow-scroll")
-                endGame(State, "Вы покинули секцию игры.").then()
+                if (State.isGameRunning) {
+                    endGame(State, "Вы покинули секцию игры.").then()
+                }
             } else if (sectionId === "game-section") {
                 document.getElementsByClassName("app-content")[0].classList.remove("overflow-scroll")
             }
