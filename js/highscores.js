@@ -1,37 +1,33 @@
-import { MAX_HIGH_SCORES, HIGH_SCORES_KEY } from "./config.js"
+import {MAX_HIGH_SCORES} from "./config.js"
 
-// Load high scores from localStorage (fallback) or fetch from server
 async function loadHighScores() {
   try {
-    // Try to fetch from server first
     try {
+      // Запрос к api для получения рекордов
       const response = await fetch("/api/highscores")
       if (response.ok) {
         return await response.json()
       }
     } catch (error) {
-      console.warn("Could not fetch high scores from server, using localStorage fallback", error)
+      console.warn("Could not fetch high scores from server", error)
     }
 
-    // Fallback to localStorage
-    const highScores = localStorage.getItem(HIGH_SCORES_KEY)
-    localStorage.clear();
-    return highScores ? JSON.parse(highScores) : []
+    // Если не удалось загрузить с сервера, возвращаем пустой массив
+    return []
   } catch (error) {
     console.error("Error loading high scores:", error)
     return []
   }
 }
 
-// Save high scores to localStorage (fallback) and send to server
 async function saveHighScores(highScores) {
   try {
-    // Save to localStorage as fallback
-    localStorage.setItem(HIGH_SCORES_KEY, JSON.stringify(highScores))
-    localStorage.clear();
-
-    // Try to save to server
+    if (!Array.isArray(highScores)) {
+      console.error("highScores is not an array in saveHighScores:", highScores)
+      return
+    }
     try {
+      // Запрос к api для сохранения рекордов
       await fetch("/api/highscores", {
         method: "POST",
         headers: {
@@ -48,13 +44,17 @@ async function saveHighScores(highScores) {
 }
 
 function updateHighScoresTable(highScores, newScoreIndex = -1) {
-  const highScoresBody = document.getElementById("highscores-body")
+  const highScoresBody = document.getElementById("highscore-body")
   if (!highScoresBody) return
 
-  // Clear the table
   highScoresBody.innerHTML = ""
 
-  // Show message if no results
+  if (!Array.isArray(highScores)) {
+    console.error("highScores is not an array in updateHighScoresTable:", highScores)
+    return;
+  }
+
+  // Создает 1 ячейку на все 5 колонок с сообщением, что нет рекордов
   if (highScores.length === 0) {
     const row = document.createElement("tr")
     const cell = document.createElement("td")
@@ -66,20 +66,18 @@ function updateHighScoresTable(highScores, newScoreIndex = -1) {
     return
   }
 
-  // Add rows with results
   highScores.forEach((score, index) => {
     const row = document.createElement("tr")
     if (index === newScoreIndex) {
       row.classList.add("new-record")
     }
 
-    // Create table cells
     const cells = [
-      index + 1, // Rank
-      score.name, // Name
-      score.score, // Score
-      score.level, // Level
-      new Date(score.date).toLocaleDateString(), // Date
+      index + 1, // Номер
+      score.name || "Player", // Имя
+      score.score || 0, // Очки
+      score.level || 1, // Уровень
+      new Date(score.date || Date.now()).toLocaleDateString(), // Дата
     ]
 
     cells.forEach((content) => {
@@ -93,11 +91,17 @@ function updateHighScoresTable(highScores, newScoreIndex = -1) {
 }
 
 function isHighScore(currentScore, highScores) {
+  // Убедимся, что highScores - это массив
+  if (!Array.isArray(highScores)) {
+    console.error("highScores is not an array in isHighScore:", highScores)
+    return true
+  }
+
   // If the table is not full, the result will definitely be included
   if (highScores.length < MAX_HIGH_SCORES) return true
 
   // Otherwise, check if the result is greater than the minimum in the table
-  const minScore = Math.min(...highScores.map((score) => score.score))
+  const minScore = Math.min(...highScores.map((score) => score.score || 0))
   return currentScore > minScore
 }
 
@@ -105,6 +109,12 @@ async function addHighScore(playerName, playerScore, playerLevel) {
   try {
     // Load current high scores
     let highScores = await loadHighScores()
+
+    // Убедимся, что highScores - это массив
+    if (!Array.isArray(highScores)) {
+      console.error("highScores is not an array in addHighScore:", highScores)
+      highScores = []
+    }
 
     // Create a new record
     const newScore = {
@@ -118,7 +128,7 @@ async function addHighScore(playerName, playerScore, playerLevel) {
     highScores.push(newScore)
 
     // Sort by descending score
-    highScores.sort((a, b) => b.score - a.score)
+    highScores.sort((a, b) => (b.score || 0) - (a.score || 0))
 
     // Keep only MAX_HIGH_SCORES records
     highScores = highScores.slice(0, MAX_HIGH_SCORES)
