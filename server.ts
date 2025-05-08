@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts"
 import { corsHeaders } from "./cors.ts"
 
-// Open the KV store
+// kv storage
 const kv = await Deno.openKv()
 
 interface HighScore {
@@ -12,7 +12,6 @@ interface HighScore {
 }
 
 serve(async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, {
       headers: corsHeaders,
@@ -22,10 +21,8 @@ serve(async (req: Request): Promise<Response> => {
   const url = new URL(req.url)
   const path = url.pathname
 
-  // API routes
   if (path === "/api/highscores") {
     if (req.method === "GET") {
-      // Get high scores
       const highScores = await getHighScores()
       return new Response(JSON.stringify(highScores), {
         headers: {
@@ -34,7 +31,6 @@ serve(async (req: Request): Promise<Response> => {
         },
       })
     } else if (req.method === "POST") {
-      // Save high scores
       try {
         const highScores = (await req.json()) as HighScore[]
         await saveHighScores(highScores)
@@ -56,15 +52,9 @@ serve(async (req: Request): Promise<Response> => {
     }
   }
 
-  // Serve static files
   try {
-    // Default to index.html for the root path
     const filePath = path === "/" ? "/index.html" : path
-
-    // Read the file from the file system
     const file = await Deno.readFile(`.${filePath}`)
-
-    // Determine content type based on file extension
     const contentType = getContentType(filePath)
 
     return new Response(file, {
@@ -74,12 +64,10 @@ serve(async (req: Request): Promise<Response> => {
       },
     })
   } catch (error) {
-    // If file not found, return 404
     if (error instanceof Deno.errors.NotFound) {
       return new Response("Not Found", { status: 404, headers: corsHeaders })
     }
 
-    // For other errors, return 500
     return new Response("Internal Server Error", {
       status: 500,
       headers: corsHeaders,
@@ -88,19 +76,13 @@ serve(async (req: Request): Promise<Response> => {
 })
 
 async function getHighScores(): Promise<HighScore[]> {
-  // Get high scores from KV store
   const result = await kv.get<HighScore[]>(["highscores"])
   return result.value || []
 }
 
 async function saveHighScores(highScores: HighScore[]): Promise<void> {
-  // Sort high scores by score (descending)
   highScores.sort((a, b) => b.score - a.score)
-
-  // Limit to top 10 scores
   const topScores = highScores.slice(0, 10)
-
-  // Save to KV store
   await kv.set(["highscores"], topScores)
 }
 

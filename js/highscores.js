@@ -91,16 +91,13 @@ function updateHighScoresTable(highScores, newScoreIndex = -1) {
 }
 
 function isHighScore(currentScore, highScores) {
-  // Убедимся, что highScores - это массив
   if (!Array.isArray(highScores)) {
     console.error("highScores is not an array in isHighScore:", highScores)
     return true
   }
 
-  // If the table is not full, the result will definitely be included
   if (highScores.length < MAX_HIGH_SCORES) return true
 
-  // Otherwise, check if the result is greater than the minimum in the table
   const minScore = Math.min(...highScores.map((score) => score.score || 0))
   return currentScore > minScore
 }
@@ -125,6 +122,7 @@ async function addHighScore(playerName, playerScore, playerLevel) {
       }
       highScores[old_player_index].score = newScore.score
       highScores[old_player_index].level = newScore.level
+      highScores[old_player_index].date = newScore.date
     } else {
       highScores.push(newScore)
     }
