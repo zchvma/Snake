@@ -88,3 +88,34 @@
 .game__minimap-portal-active {
   transform: scale(1.5);
 }
+
+/* Стили бонусов на мини-карте */
+.game__minimap-bonus,
+.game__minimap-bonus-speedup,
+.game__minimap-bonus-speeddown,
+.game__minimap-bonus-destroyer,
+.game__minimap-bonus-inversion {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.game__minimap-bonus-speedup {
+  background-color: var(--color-speed-up);
+}
+
+.game__minimap-bonus-speeddown {
+  background-color: var(--color-speed-down);
+}
+
+.game__minimap-bonus-destroyer {
+  background-color: var(--color-destroyer);
+}
+
+.game__minimap-bonus-inversion {
+  background-color: var(--color-inversion);
+}
+
+.game__minimap-bonus {
+  background-color: #ffffff;
+}

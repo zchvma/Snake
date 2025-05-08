@@ -74,9 +74,9 @@ function destroyNearbyWalls(gameState) {
     if (snake.length === 0) return
 
     const head = snake[0]
-    const radius = 2
+    const radius = 20
 
-    // Анимируем разрушение стен
+    // Разрушение стен
     walls.forEach((wall) => {
       const distance = manhattanDistance(wall, head)
       if (distance <= radius) {
@@ -87,7 +87,7 @@ function destroyNearbyWalls(gameState) {
       }
     })
 
-    // Удаляем стены после анимации
+    // Удаляем стены
     setTimeout(() => {
       gameState.walls = walls.filter((wall) => {
         const distance = manhattanDistance(wall, head)

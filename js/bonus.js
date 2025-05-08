@@ -38,6 +38,9 @@ function generateBonus(gameState) {
     if (validPosition) {
       gameState.bonuses.push(bonus)
 
+      // Обновляем мини-карту сразу после добавления бонуса
+      updateMinimap(gameState)
+
       setTimeout(() => {
         const bonusCell = document.querySelector(`.cell[data-row="${bonus.row}"][data-col="${bonus.col}"]`)
         if (bonusCell) {

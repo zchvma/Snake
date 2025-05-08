@@ -52,6 +52,29 @@ function updateMinimap(gameState) {
 
     portals.forEach((portal) => createMinimapElement(`game__minimap-portal-${portal.pairId}`, portal))
 
+    // Отрисовка бонусов на мини-карте
+    gameState.bonuses.forEach((bonus) => {
+      let className = "game__minimap-bonus"
+
+      // Добавляем разные классы в зависимости от типа бонуса
+      switch (bonus.type) {
+        case "speedUp":
+          className = "game__minimap-bonus-speedup"
+          break
+        case "speedDown":
+          className = "game__minimap-bonus-speeddown"
+          break
+        case "destroyer":
+          className = "game__minimap-bonus-destroyer"
+          break
+        case "inversion":
+          className = "game__minimap-bonus-inversion"
+          break
+      }
+
+      createMinimapElement(className, bonus)
+    })
+
     poisonZones.forEach((zone) => {
       zone.cells.forEach((cell) => createMinimapElement("game__minimap-poison", cell))
     })

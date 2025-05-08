@@ -20,7 +20,7 @@ function levelUp(gameState) {
       gameState.gameSpeed = calculateBaseSpeed(gameState)
       updateGameInterval(gameState)
 
-      generateWalls(Math.ceil(WALL_GENERATE_GROW_RATE))
+      generateWalls(gameState, Math.ceil(WALL_GENERATE_GROW_RATE))
 
       applyTheme(gameState)
     }, 500)
