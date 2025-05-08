@@ -90,20 +90,18 @@ function updateHighScoresTable(highScores, newScoreIndex = -1) {
   })
 }
 
-function isHighScore(playerName, currentScore, highScores) {
+function isHighScore(currentScore, highScores) {
   // Убедимся, что highScores - это массив
   if (!Array.isArray(highScores)) {
     console.error("highScores is not an array in isHighScore:", highScores)
     return true
   }
 
-  const player_index = highScores.findIndex((score) => score.name === playerName)
+  // If the table is not full, the result will definitely be included
+  if (highScores.length < MAX_HIGH_SCORES) return true
 
-  if (highScores.length < MAX_HIGH_SCORES && player_index !== -1) {
-    return true
-  }
-
-  const minScore = player_index !== -1 ? highScores[player_index].score : Math.min(...highScores.map((score) => score.score || 0))
+  // Otherwise, check if the result is greater than the minimum in the table
+  const minScore = Math.min(...highScores.map((score) => score.score || 0))
   return currentScore > minScore
 }
 
@@ -122,7 +120,9 @@ async function addHighScore(playerName, playerScore, playerLevel) {
     const old_player_index = highScores.findIndex((score) => score.name === newScore.name)
 
     if (old_player_index !== -1) {
-      // Предполагается, что то, что мы добавляем лучше старого рекорда
+      if (newScore.score <= highScores[old_player_index].score) {
+        return old_player_index;
+      }
       highScores[old_player_index].score = newScore.score
       highScores[old_player_index].level = newScore.level
     } else {
