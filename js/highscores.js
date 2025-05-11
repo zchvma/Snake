@@ -31,13 +31,14 @@ async function saveHighScores(highScores) {
             return
         }
         try {
+            let sgsd = 4
             // Запрос к api для сохранения рекордов
             await fetch("/api/highscores", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"/*,
-                    "Authorization": `Bearer ${ADMIN_TOKEN}`  // Добавь сюда свой токен
-                */},
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${sgsd}`  // Добавь сюда свой токен
+                },
                 body: JSON.stringify(highScores),
             })
         } catch (error) {
