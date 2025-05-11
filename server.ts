@@ -1,7 +1,6 @@
 import {serve} from "https://deno.land/std@0.177.0/http/server.ts"
 import {corsHeaders} from "./cors.ts"
 
-// kv storage
 const kv = await Deno.openKv()
 
 interface HighScore {
@@ -11,44 +10,57 @@ interface HighScore {
     date: number
 }
 
+const ADMIN_TOKEN = Deno.env.get("ADMIN_TOKEN")
+if (!ADMIN_TOKEN) {
+    console.warn("Warning: ADMIN_TOKEN environment variable is not set. Protected endpoints will not work.")
+}
+
 serve(async (req: Request): Promise<Response> => {
+    const url = new URL(req.url)
+    const path = url.pathname
+
     if (req.method === "OPTIONS") {
         return new Response(null, {
             headers: corsHeaders,
         })
     }
 
-    const url = new URL(req.url)
-    const path = url.pathname
+    function isAdmin(req: Request): boolean {
+        const auth = req.headers.get("authorization") || ""
+        return auth === `Bearer ${ADMIN_TOKEN}`
+    }
 
-    if (path === "/api/highscores") {
-        if (req.method === "GET") {
-            const highScores = await getHighScores()
-            return new Response(JSON.stringify(highScores), {
+    if (path === "/api/highscores" && req.method === "GET") {
+        const highScores = await getHighScores()
+        return new Response(JSON.stringify(highScores), {
+            headers: {
+                ...corsHeaders,
+                "Content-Type": "application/json",
+            },
+        })
+    }
+
+    if (path === "/api/highscores" && req.method === "POST") {
+        if (!isAdmin(req)) {
+            return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } })
+        }
+        try {
+            const highScores = (await req.json()) as HighScore[]
+            await saveHighScores(highScores)
+            return new Response(JSON.stringify({ success: true }), {
                 headers: {
                     ...corsHeaders,
                     "Content-Type": "application/json",
                 },
             })
-        } else if (req.method === "POST") {
-            try {
-                const highScores = (await req.json()) as HighScore[]
-                await saveHighScores(highScores)
-                return new Response(JSON.stringify({success: true}), {
-                    headers: {
-                        ...corsHeaders,
-                        "Content-Type": "application/json",
-                    },
-                })
-            } catch (error) {
-                return new Response(JSON.stringify({error: "Failed to save high scores"}), {
-                    status: 400,
-                    headers: {
-                        ...corsHeaders,
-                        "Content-Type": "application/json",
-                    },
-                })
-            }
+        } catch (error) {
+            return new Response(JSON.stringify({ error: "Failed to save high scores" }), {
+                status: 400,
+                headers: {
+                    ...corsHeaders,
+                    "Content-Type": "application/json",
+                },
+            })
         }
     }
 
@@ -65,9 +77,8 @@ serve(async (req: Request): Promise<Response> => {
         })
     } catch (error) {
         if (error instanceof Deno.errors.NotFound) {
-            return new Response("Not Found", {status: 404, headers: corsHeaders})
+            return new Response("Not Found", { status: 404, headers: corsHeaders })
         }
-
         return new Response("Internal Server Error", {
             status: 500,
             headers: corsHeaders,
@@ -88,7 +99,6 @@ async function saveHighScores(highScores: HighScore[]): Promise<void> {
 
 function getContentType(path: string): string {
     const extension = path.split(".").pop()?.toLowerCase() || ""
-
     const contentTypes: Record<string, string> = {
         html: "text/html",
         css: "text/css",
@@ -101,6 +111,11 @@ function getContentType(path: string): string {
         svg: "image/svg+xml",
         ico: "image/x-icon",
     }
-
     return contentTypes[extension] || "text/plain"
+}
+
+export const corsHeaders = {
+    "Access-Control-Allow-Origin": "https://yourdomain.com",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
 }
