@@ -2,8 +2,6 @@ import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { create, verify, getNumericDate, type Payload } from "https://deno.land/x/djwt@v2.8/mod.ts";
 import { corsHeaders } from "./cors.ts";
 
-// Load .env if present
-import { config as loadEnv } from "https://deno.land/std@0.201.0/dotenv/mod.ts";
 await loadEnv({ export: true });
 
 const ADMIN_TOKEN = Deno.env.get("ADMIN_TOKEN");
