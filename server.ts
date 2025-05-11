@@ -121,4 +121,4 @@ function getContentType(path: string): string {
     return contentTypes[extension] || "text/plain"
 }
 
-export {ADMIN_TOKEN}
+// export {ADMIN_TOKEN}
