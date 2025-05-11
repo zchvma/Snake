@@ -1,10 +1,14 @@
 import {MAX_HIGH_SCORES} from "./config.js"
+import {ADMIN_TOKEN} from "../server.js";
+
 
 async function loadHighScores() {
     try {
         try {
             // Запрос к api для получения рекордов
-            const response = await fetch("/api/highscores")
+            const response = await fetch("/api/highscores", {
+                headers: {"Authorization": `Bearer ${ADMIN_TOKEN}`}
+            })
             if (response.ok) {
                 return await response.json()
             }
@@ -32,6 +36,7 @@ async function saveHighScores(highScores) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${ADMIN_TOKEN}`  // Добавь сюда свой токен
                 },
                 body: JSON.stringify(highScores),
             })
