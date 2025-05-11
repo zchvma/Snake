@@ -1,121 +1,120 @@
-import {serve} from "https://deno.land/std@0.177.0/http/server.ts"
-import {corsHeaders} from "./cors.ts"
+export { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+export {
+    create,
+    verify,
+    getNumericDate,
+    Header,
+    Payload,
+} from "https://deno.land/x/djwt@v2.8/mod.ts";
+import { corsHeaders } from "./cors.ts";
 
-const kv = await Deno.openKv()
-
-interface HighScore {
-    name: string
-    score: number
-    level: number
-    date: number
-}
-
-const ADMIN_TOKEN = Deno.env.get("ADMIN_TOKEN")
+const ADMIN_TOKEN = Deno.env.get("ADMIN_TOKEN");
 if (!ADMIN_TOKEN) {
-    console.warn("Warning: ADMIN_TOKEN environment variable is not set. Protected endpoints will not work.")
+    console.warn(
+        "Warning: ADMIN_TOKEN environment variable is not set. Protected endpoints will not work.",
+    );
 }
 
-serve(async (req: Request): Promise<Response> => {
-    const url = new URL(req.url)
-    const path = url.pathname
+const kv = await Deno.openKv();
+const header: Header = { alg: "HS256", typ: "JWT" };
+
+// Выпускаем JWT клиенту (в данном примере без реального логина — просто guest)
+async function issueJwt(userId: string): Promise<string> {
+    const payload: Payload = {
+        sub: userId,
+        exp: getNumericDate(60 * 60), // 1 час
+    };
+    return await create(header, payload, ADMIN_TOKEN!);
+}
+
+async function getHighScores() {
+    const result = await kv.get(["highscores"]);
+    return result.value ?? [];
+}
+
+async function saveHighScores(highScores: unknown[]) {
+    // Опционально: сортировка и ограничение длины
+    highScores.sort((a: any, b: any) => b.score - a.score);
+    const top = highScores.slice(0, 10);
+    await kv.set(["highscores"], top);
+}
+
+serve(async (req) => {
+    const { pathname } = new URL(req.url);
 
     if (req.method === "OPTIONS") {
-        return new Response(null, {
-            headers: corsHeaders,
-        })
+        return new Response(null, { headers: corsHeaders });
     }
 
-    function isAdmin(req: Request): boolean {
-        const auth = req.headers.get("authorization") || ""
-        return auth === `Bearer ${ADMIN_TOKEN}`
+    // 1) Эндпоинт для получения JWT
+    if (pathname === "/api/login" && req.method === "POST") {
+        // Здесь у вас могла быть проверка user/pass, сейчас сразу guest
+        const token = await issueJwt("guest");
+        return new Response(JSON.stringify({ token }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
     }
 
-    if (path === "/api/highscores" && req.method === "GET") {
-        const highScores = await getHighScores()
-        return new Response(JSON.stringify(highScores), {
-            headers: {
-                ...corsHeaders,
-                "Content-Type": "application/json",
-            },
-        })
+    // 2) GET: возвращаем текущие рекорды
+    if (pathname === "/api/highscores" && req.method === "GET") {
+        const highs = await getHighScores();
+        return new Response(JSON.stringify(highs), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
     }
 
-    if (path === "/api/highscores" && req.method === "POST") {
-        if (!isAdmin(req)) {
-            return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } })
-        }
+    // 3) POST: сохраняем новые рекорды (только с валидным JWT)
+    if (pathname === "/api/highscores" && req.method === "POST") {
+        const authHeader = req.headers.get("Authorization") || "";
+        const token = authHeader.replace("Bearer ", "");
+
         try {
-            const highScores = (await req.json()) as HighScore[]
-            await saveHighScores(highScores)
-            return new Response(JSON.stringify({ success: true }), {
-                headers: {
-                    ...corsHeaders,
-                    "Content-Type": "application/json",
-                },
-            })
-        } catch (error) {
-            return new Response(JSON.stringify({ error: "Failed to save high scores" }), {
+            await verify(token, ADMIN_TOKEN!, "HS256");
+        } catch {
+            return new Response(JSON.stringify({ error: "Unauthorized" }), {
+                status: 401,
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+        }
+
+        let data: unknown;
+        try {
+            data = await req.json();
+        } catch {
+            return new Response(JSON.stringify({ error: "Invalid JSON" }), {
                 status: 400,
-                headers: {
-                    ...corsHeaders,
-                    "Content-Type": "application/json",
-                },
-            })
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
         }
+
+        await saveHighScores(data as any[]);
+        return new Response(JSON.stringify({ success: true }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
     }
 
+    // 4) Статические файлы (index.html, скрипты, стили...)
     try {
-        const filePath = path === "/" ? "/index.html" : path
-        const file = await Deno.readFile(`.${filePath}`)
-        const contentType = getContentType(filePath)
-
+        const filePath = pathname === "/" ? "/index.html" : pathname;
+        const file = await Deno.readFile(`./public${filePath}`);
+        const ext = filePath.split(".").pop()?.toLowerCase() ?? "";
+        const mimes: Record<string, string> = {
+            html: "text/html",
+            js: "application/javascript",
+            css: "text/css",
+            json: "application/json",
+            png: "image/png",
+            jpg: "image/jpeg",
+            svg: "image/svg+xml",
+        };
+        const contentType = mimes[ext] ?? "application/octet-stream";
         return new Response(file, {
-            headers: {
-                ...corsHeaders,
-                "Content-Type": contentType,
-            },
-        })
-    } catch (error) {
-        if (error instanceof Deno.errors.NotFound) {
-            return new Response("Not Found", { status: 404, headers: corsHeaders })
+            headers: { ...corsHeaders, "Content-Type": contentType },
+        });
+    } catch (err) {
+        if (err instanceof Deno.errors.NotFound) {
+            return new Response("Not Found", { status: 404, headers: corsHeaders });
         }
-        return new Response("Internal Server Error", {
-            status: 500,
-            headers: corsHeaders,
-        })
+        return new Response("Internal Error", { status: 500, headers: corsHeaders });
     }
-})
-
-async function getHighScores(): Promise<HighScore[]> {
-    const result = await kv.get<HighScore[]>(["highscores"])
-    return result.value || []
-}
-
-async function saveHighScores(highScores: HighScore[]): Promise<void> {
-    highScores.sort((a, b) => b.score - a.score)
-    const topScores = highScores.slice(0, 10)
-    await kv.set(["highscores"], topScores)
-}
-
-function getContentType(path: string): string {
-    const extension = path.split(".").pop()?.toLowerCase() || ""
-    const contentTypes: Record<string, string> = {
-        html: "text/html",
-        css: "text/css",
-        js: "text/javascript",
-        json: "application/json",
-        png: "image/png",
-        jpg: "image/jpeg",
-        jpeg: "image/jpeg",
-        gif: "image/gif",
-        svg: "image/svg+xml",
-        ico: "image/x-icon",
-    }
-    return contentTypes[extension] || "text/plain"
-}
-
-export const corsHeaders = {
-    "Access-Control-Allow-Origin": "https://yourdomain.com",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-}
+});
