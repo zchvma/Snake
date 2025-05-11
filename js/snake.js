@@ -124,9 +124,15 @@ function moveSnake(gameState) {
 
       generateFood(gameState)
 
-      // if (Math.random() < 0.5) {
+      if (gameState.bonuses.length < 10) {
         generateBonus(gameState)
-      // }
+        if (Math.random() < 0.6) {
+          generateBonus(gameState)
+        }
+        if (Math.random() > 0.4) {
+          generateBonus(gameState)
+        }
+      }
 
       if (gameState.scoreCounter % POINTS_PER_REGENERATE === 0) {
         regenerateWalls(gameState)

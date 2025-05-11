@@ -22,6 +22,9 @@ const EXPANSION_THRESHOLD = 5
 // Максимальное количество порталов
 const MAX_PORTAL_PAIRS = 3
 
+// Максимальное количество стен
+const MAX_WALLS = 100
+
 // Константы для таблицы лучших результатов
 const MAX_HIGH_SCORES = 10 // Максимальное количество записей в таблице
 const HIGH_SCORES_KEY = "snakeHighScores" // Ключ для localStorage
@@ -62,4 +65,5 @@ export {
   BONUS_DURATION,
   THEMES,
   WALL_GENERATE_GROW_RATE,
+  MAX_WALLS
 }

@@ -69,9 +69,7 @@ function generateBonus(gameState) {
 
             setTimeout(() => {
               gameState.bonuses.splice(index, 1)
-              updateMinimap(gameState)
-              renderGame(gameState)
-            }, 300)
+            }, 2000)
           }
         } catch (error) {
           console.error("Ошибка в таймауте бонуса:", error)

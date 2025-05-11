@@ -35,10 +35,6 @@ function initializeGame(GameState) {
 
         initializeBoard(GameState)
 
-        generateWalls(GameState, 2 + Math.ceil(WALL_GENERATE_GROW_RATE * GameState.levelCounter))
-        generatePortals(GameState, 4)
-        generatePoisonZones(GameState, 2)
-
         const safePosition = findSafeSnakePosition(GameState)
 
         GameState.snake = [
@@ -49,6 +45,10 @@ function initializeGame(GameState) {
             },
             {row: safePosition.row, col: safePosition.col - 2},
         ]
+
+        generateWalls(GameState, 2 + Math.ceil(WALL_GENERATE_GROW_RATE * GameState.levelCounter))
+        generatePortals(GameState, 4)
+        generatePoisonZones(GameState, 2)
 
         GameState.activeBonusEffects = {
             speedUp: {active: false, endTime: 0},

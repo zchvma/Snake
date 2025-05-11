@@ -81,7 +81,8 @@
   width: 60%;
   height: 60%;
   background-color: var(--color-speed-up);
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  /*clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);*/
+  border-radius: 50%;
   animation: rotate 3s linear infinite;
   transition: transform 0.3s ease;
 }
@@ -98,7 +99,8 @@
   width: 60%;
   height: 60%;
   background-color: var(--color-speed-down);
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  /*clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);*/
+  border-radius: 50%;
   animation: rotate 3s linear infinite reverse;
   transition: transform 0.3s ease;
 }
@@ -115,7 +117,8 @@
   width: 70%;
   height: 70%;
   background-color: var(--color-destroyer);
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  /*clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);*/
+  border-radius: 50%;
   animation: pulse 1s infinite alternate;
   transition: transform 0.3s ease;
 }
@@ -132,7 +135,8 @@
   width: 60%;
   height: 60%;
   background-color: var(--color-inversion);
-  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  /*clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);*/
+  border-radius: 50%;
   transform: rotate(45deg);
   animation: pulse 1s infinite alternate;
   transition: transform 0.3s ease;

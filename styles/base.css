@@ -14,10 +14,10 @@
   --color-text: #ffffff;
   --color-wall: #795548;
   --color-portal: #9c27b0;
-  --color-speed-up: #f44336;
-  --color-speed-down: #2196f3;
-  --color-destroyer: #ff9800;
-  --color-inversion: #e91e63;
+  --color-speed-up: /*#f44336;*/ var(--color-accent);
+  --color-speed-down: /*#2196f3;*/ var(--color-accent);
+  --color-destroyer: /*#ff9800;*/ var(--color-accent);
+  --color-inversion: /*#e91e63;*/ var(--color-accent);
   --color-poison: #8bc34a;
   --color-overlay: rgba(0, 0, 0, 0.85);
   --border-radius: calc(var(--grid-size) / 8);
@@ -119,7 +119,7 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
   /* Добавляем свою стрелку */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'><path fill='white' d='M0 0l6 6 6-6z'/></svg>");
+  background-image: url("../images/triangle.png");
   background-repeat: no-repeat;
   background-position: right 0.5em center;
   background-size: 0.6em auto;
