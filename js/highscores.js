@@ -1,7 +1,5 @@
 import {MAX_HIGH_SCORES} from "./config.js"
 
-const ADMIN_TOKEN = Deno.env.get("ADMIN_TOKEN");
-
 async function loadHighScores() {
     try {
         try {
@@ -33,8 +31,7 @@ async function saveHighScores(highScores) {
             await fetch("/api/highscores", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${ADMIN_TOKEN}`
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(highScores),
             })
