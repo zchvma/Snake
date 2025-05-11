@@ -2,7 +2,6 @@ import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { create, verify, getNumericDate, type Payload } from "https://deno.land/x/djwt@v2.8/mod.ts";
 import { corsHeaders } from "./cors.ts";
 
-
 const ADMIN_TOKEN = Deno.env.get("ADMIN_TOKEN");
 if (!ADMIN_TOKEN) {
     console.warn("⚠️ ADMIN_TOKEN not set — protected routes will return 401");
@@ -10,7 +9,7 @@ if (!ADMIN_TOKEN) {
 
 const kv = await Deno.openKv();
 
-// Issue JWT to client (e.g. guest)
+// Issue a JWT signed with ADMIN_TOKEN
 async function issueJwt(userId: string): Promise<string> {
     const header = { alg: "HS256", typ: "JWT" };
     const payload: Payload = { sub: userId, exp: getNumericDate(60 * 60) };
@@ -26,7 +25,7 @@ serve(async (req: Request) => {
         return new Response(null, { headers: corsHeaders });
     }
 
-    // 1) /api/login → returns a temporary JWT
+    // 1) Issue JWT
     if (path === "/api/login" && req.method === "POST") {
         const token = await issueJwt("guest");
         return new Response(JSON.stringify({ token }), {
@@ -34,7 +33,7 @@ serve(async (req: Request) => {
         });
     }
 
-    // 2) GET highscores
+    // 2) Get highscores
     if (path === "/api/highscores" && req.method === "GET") {
         const stored = await kv.get<unknown[]>(["highscores"]);
         return new Response(JSON.stringify(stored.value ?? []), {
@@ -42,7 +41,7 @@ serve(async (req: Request) => {
         });
     }
 
-    // 3) POST highscores (requires valid Bearer JWT)
+    // 3) Save highscores (protected)
     if (path === "/api/highscores" && req.method === "POST") {
         const authHeader = req.headers.get("Authorization") || "";
         const token = authHeader.replace(/^Bearer\s+/, "");
@@ -65,7 +64,6 @@ serve(async (req: Request) => {
             });
         }
 
-        // Sort and keep top 10
         data.sort((a: any, b: any) => b.score - a.score);
         await kv.set(["highscores"], data.slice(0, 10));
         return new Response(JSON.stringify({ success: true }), {
@@ -73,30 +71,28 @@ serve(async (req: Request) => {
         });
     }
 
-    // 4) Serve static files from project root (match structure)
-    const filePath = path === "/" ? "/index.html" : path;
+    // 4) Static file serving from root, js/, styles/, images/
+    // Map "/" -> "./index.html", otherwise serve file from filesystem
+    let fsPath = path === "/" ? "./index.html" : `.${path}`;
+
     try {
-        let fsPath = `.${filePath}`;
-        // try under /js or /styles if not found at root
-        try { await Deno.stat(fsPath); } catch {
-            // fallback directories
-            if (filePath.startsWith("/js/")) fsPath = `.${filePath}`;
-            else if (filePath.startsWith("/styles/")) fsPath = `.${filePath}`;
-            else fsPath = `./public${filePath}`;
-        }
         const file = await Deno.readFile(fsPath);
         const ext = fsPath.split('.').pop()?.toLowerCase() || '';
-        const mimes: Record<string,string> = {
+        const mimeMap: Record<string,string> = {
             html: "text/html",
             js: "application/javascript",
             css: "text/css",
             json: "application/json",
             png: "image/png",
             jpg: "image/jpeg",
+            jpeg: "image/jpeg",
+            gif: "image/gif",
             svg: "image/svg+xml",
+            ico: "image/x-icon",
         };
+        const contentType = mimeMap[ext] ?? "application/octet-stream";
         return new Response(file, {
-            headers: { ...corsHeaders, "Content-Type": mimes[ext] || "application/octet-stream" }
+            headers: { ...corsHeaders, "Content-Type": contentType }
         });
     } catch (e) {
         if (e instanceof Deno.errors.NotFound) {
