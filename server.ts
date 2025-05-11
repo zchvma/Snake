@@ -1,22 +1,20 @@
-export { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-export { create, verify, getNumericDate } from "https://deno.land/x/djwt@v2.8/mod.ts";
-export type { Payload } from "https://deno.land/x/djwt@v2.8/mod.ts";
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { create, verify, getNumericDate, type Payload } from "https://deno.land/x/djwt@v2.8/mod.ts";
 import { corsHeaders } from "./cors.ts";
 
 const ADMIN_TOKEN = Deno.env.get("ADMIN_TOKEN");
 if (!ADMIN_TOKEN) {
-    console.warn("⚠️ ADMIN_TOKEN не задан — проверьте .env или переменные окружения");
+    console.warn("⚠️ ADMIN_TOKEN not set—protected routes will 401.");
 }
 
 const kv = await Deno.openKv();
 
-// Функция выдачи JWT
+// Issue a JWT to “guest”
 async function issueJwt(userId: string): Promise<string> {
-    // здесь не нужен импорт Header — просто даём литерал
     const header = { alg: "HS256", typ: "JWT" };
     const payload: Payload = {
         sub: userId,
-        exp: getNumericDate(60 * 60), // через час
+        exp: getNumericDate(60 * 60),
     };
     return await create(header, payload, ADMIN_TOKEN!);
 }
@@ -24,45 +22,36 @@ async function issueJwt(userId: string): Promise<string> {
 serve(async (req) => {
     const url = new URL(req.url);
 
+    // CORS preflight
     if (req.method === "OPTIONS") {
         return new Response(null, { headers: corsHeaders });
     }
 
-    // Эндпоинт для логина/получения JWT
+    // 1) /api/login → returns { token }
     if (url.pathname === "/api/login" && req.method === "POST") {
         const token = await issueJwt("guest");
         return new Response(JSON.stringify({ token }), {
-            headers: {
-                ...corsHeaders,
-                "Content-Type": "application/json",
-            },
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
     }
 
-    // GET для чтения таблицы
+    // 2) GET /api/highscores → returns stored highs
     if (url.pathname === "/api/highscores" && req.method === "GET") {
-        const stored = await kv.get<unknown[]>(["highscores"]);
-        return new Response(JSON.stringify(stored.value ?? []), {
-            headers: {
-                ...corsHeaders,
-                "Content-Type": "application/json",
-            },
+        const result = await kv.get<unknown[]>(["highscores"]);
+        return new Response(JSON.stringify(result.value ?? []), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
     }
 
-    // POST для записи — только с корректным Bearer JWT
+    // 3) POST /api/highscores → saves highs, only with valid JWT
     if (url.pathname === "/api/highscores" && req.method === "POST") {
         const auth = req.headers.get("Authorization")?.replace("Bearer ", "");
         try {
-            // verify сам бросает, если что-то не так
             await verify(auth!, ADMIN_TOKEN!, "HS256");
         } catch {
             return new Response(JSON.stringify({ error: "Unauthorized" }), {
                 status: 401,
-                headers: {
-                    ...corsHeaders,
-                    "Content-Type": "application/json",
-                },
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
         }
 
@@ -72,24 +61,35 @@ serve(async (req) => {
         } catch {
             return new Response(JSON.stringify({ error: "Invalid JSON" }), {
                 status: 400,
-                headers: {
-                    ...corsHeaders,
-                    "Content-Type": "application/json",
-                },
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
         }
 
-        // сохраняем
         data.sort((a: any, b: any) => b.score - a.score);
         await kv.set(["highscores"], data.slice(0, 10));
 
         return new Response(JSON.stringify({ success: true }), {
-            headers: {
-                ...corsHeaders,
-                "Content-Type": "application/json",
-            },
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
     }
 
-    // … остальной код для отдачи статики …
+    // 4) Fallback: serve static from ./public
+    try {
+        const path = url.pathname === "/" ? "/index.html" : url.pathname;
+        const file = await Deno.readFile(`./public${path}`);
+        const ext = path.split(".").pop()?.toLowerCase() ?? "";
+        const mimes: Record<string,string> = {
+            html: "text/html", js: "application/javascript", css: "text/css",
+            json: "application/json", png: "image/png", jpg: "image/jpeg",
+            svg: "image/svg+xml"
+        };
+        return new Response(file, {
+            headers: { ...corsHeaders, "Content-Type": mimes[ext] ?? "application/octet-stream" },
+        });
+    } catch (err) {
+        if (err instanceof Deno.errors.NotFound) {
+            return new Response("Not Found", { status: 404, headers: corsHeaders });
+        }
+        return new Response("Internal Server Error", { status: 500, headers: corsHeaders });
+    }
 });
