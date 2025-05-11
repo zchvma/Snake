@@ -73,10 +73,9 @@ serve(async (req) => {
         });
     }
 
-    // 4) Fallback: serve static from ./public
     try {
         const path = url.pathname === "/" ? "/index.html" : url.pathname;
-        const file = await Deno.readFile(`./public${path}`);
+        const file = await Deno.readFile(`${path}`);
         const ext = path.split(".").pop()?.toLowerCase() ?? "";
         const mimes: Record<string,string> = {
             html: "text/html", js: "application/javascript", css: "text/css",
