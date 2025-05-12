@@ -22,6 +22,11 @@ serve(async (req: Request): Promise<Response> => {
     const path = url.pathname
 
     if (path === "/api/highscores") {
+        const origin = req.headers.get("origin") || req.headers.get("referer") || "";
+        if (origin != "https://zva-snake-game.deno.dev/") {
+            return new Response("Access denied", { status: 403 });
+        }
+
         if (req.method === "GET") {
             const highScores = await getHighScores()
             return new Response(JSON.stringify(highScores), {
@@ -31,6 +36,11 @@ serve(async (req: Request): Promise<Response> => {
                 },
             })
         } else if (req.method === "POST") {
+            const origin = req.headers.get("origin") || req.headers.get("referer") || "";
+            if (origin != "https://zva-snake-game.deno.dev/") {
+                return new Response("Access denied", { status: 403 });
+            }
+
             try {
                 const highScores = (await req.json()) as HighScore[]
                 await saveHighScores(highScores)
