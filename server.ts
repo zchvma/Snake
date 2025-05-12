@@ -75,14 +75,20 @@ serve(async (req: Request) => {
         const baseDir = Deno.cwd();
         let filePath = decodeURIComponent(url.pathname);
 
-        // Default to index.html
+        console.log(`[Request] Path: ${filePath}`); // Логирование
+
         if (filePath === "/") filePath = "/index.html";
 
-        // Security check
         const fullPath = `${baseDir}/public${filePath}`;
+        console.log(`[File System] Looking for: ${fullPath}`); // Логирование
+
         if (!fullPath.startsWith(baseDir + "/public/")) {
+            console.error(`[Security] Path traversal attempt: ${fullPath}`);
             return new Response("Forbidden", { status: 403 });
         }
+
+        const fileInfo = await Deno.stat(fullPath);
+        console.log(`[File Info] ${JSON.stringify(fileInfo)}`); // Логирование
 
         const file = await Deno.readFile(fullPath);
         const ext = filePath.split('.').pop()?.toLowerCase() || '';
@@ -107,6 +113,7 @@ serve(async (req: Request) => {
             }
         });
     } catch (error) {
+        console.error(`[Error] ${error}`);
         if (error instanceof Deno.errors.NotFound) {
             return new Response("Not Found", { status: 404, headers: corsHeaders });
         }
