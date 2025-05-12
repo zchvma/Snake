@@ -1,5 +1,5 @@
 import {MAX_HIGH_SCORES} from "./config.js"
-ЯЯЯ
+
 async function loadHighScores() {
     try {
         try {
