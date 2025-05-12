@@ -23,7 +23,7 @@ serve(async (req: Request): Promise<Response> => {
 
     if (path === "/api/highscores") {
         const origin = req.headers.get("origin") || req.headers.get("referer") || "";
-        if (origin != "https://zva-snake-game.deno.dev/") {
+        if (origin != "https://zva-snake-game.deno.dev") {
             return new Response("Access denied", { status: 403 });
         }
 
@@ -37,11 +37,9 @@ serve(async (req: Request): Promise<Response> => {
             })
         } else if (req.method === "POST") {
             const origin = req.headers.get("origin") || req.headers.get("referer") || "";
-            if (origin != "https://zva-snake-game.deno.dev/") {
+            if (origin != "https://zva-snake-game.deno.dev") {
                 return new Response("Access denied", { status: 403 });
             }
-
-            console.log(origin)
 
             try {
                 const highScores = (await req.json()) as HighScore[]
