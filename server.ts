@@ -72,7 +72,9 @@ serve(async (req: Request) => {
 
     // 4) Static files handling
     try {
+        console.log("7757");
         const baseDir = Deno.cwd();
+        console.log(baseDir);
         let filePath = decodeURIComponent(url.pathname);
 
         console.log(`[Request] Path: ${filePath}`); // Логирование
