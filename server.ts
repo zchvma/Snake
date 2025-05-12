@@ -22,12 +22,11 @@ serve(async (req: Request): Promise<Response> => {
     const path = url.pathname
 
     if (path === "/api/highscores") {
-        const origin = req.headers.get("origin");
-        if (origin != "https://zva-snake-game.deno.dev") {
-            return new Response("Access Denied", { status: 403 });
-        }
-
         if (req.method === "GET") {
+            const origin = req.headers.get("referer");
+            if (origin != "https://zva-snake-game.deno.dev/") {
+                return new Response("Access Denied", { status: 403 });
+            }
             const highScores = await getHighScores()
             return new Response(JSON.stringify(highScores), {
                 headers: {
