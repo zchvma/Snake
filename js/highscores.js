@@ -20,64 +20,23 @@ async function loadHighScores() {
     }
 }
 
-async function loginAsAdmin(inputToken) {
-    try {
-        const response = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({ token: inputToken }),
-        })
-
-        if (response.ok) {
-            console.log("Login successful")
-            return true
-        } else {
-            console.warn("Login failed:", await response.json())
-            return false
-        }
-    } catch (err) {
-        console.error("Login error:", err)
-        return false
-    }
-}
-
 async function saveHighScores(highScores) {
     try {
         if (!Array.isArray(highScores)) {
             console.error("highScores is not an array in saveHighScores:", highScores)
             return
         }
-
-        let response = await fetch("/api/highscores", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify(highScores),
-        })
-
-        // Если не авторизован, попробуем залогиниться и повторить
-        if (response.status === 401) {
-            const adminToken = prompt("Введите админ токен:")
-            const loginOk = await loginAsAdmin(adminToken)
-            if (loginOk) {
-                response = await fetch("/api/highscores", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(highScores),
-                })
-            }
-        }
-
-        if (!response.ok) {
-            console.warn("Save high scores failed:", await response.text())
+        try {
+            // Запрос к api для сохранения рекордов
+            await fetch("/api/highscores", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(highScores),
+            })
+        } catch (error) {
+            console.warn("Could not save high scores to server", error)
         }
     } catch (error) {
         console.error("Error saving high scores:", error)
