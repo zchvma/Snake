@@ -1,124 +1,106 @@
-import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-import { create, verify, getNumericDate, type Payload } from "https://deno.land/x/djwt@v2.8/mod.ts";
+import {serve} from "https://deno.land/std@0.177.0/http/server.ts"
+import {corsHeaders} from "./cors.ts"
 
-const ADMIN_TOKEN = Deno.env.get("ADMIN_TOKEN");
-if (!ADMIN_TOKEN) {
-    console.warn("⚠️ ADMIN_TOKEN not set — protected routes will return 401");
+// kv storage
+const kv = await Deno.openKv()
+
+interface HighScore {
+    name: string
+    score: number
+    level: number
+    date: number
 }
 
-const kv = await Deno.openKv();
-
-// CORS headers
-const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
-
-async function issueJwt(userId: string): Promise<string> {
-    const header = { alg: "HS256", typ: "JWT" };
-    const payload: Payload = { sub: userId, exp: getNumericDate(60 * 60) };
-    return await create(header, payload, ADMIN_TOKEN!);
-}
-
-serve(async (req: Request) => {
-    const url = new URL(req.url);
-    const path = url.pathname;
-
-    // CORS preflight
+serve(async (req: Request): Promise<Response> => {
     if (req.method === "OPTIONS") {
-        return new Response(null, { headers: corsHeaders });
+        return new Response(null, {
+            headers: corsHeaders,
+        })
     }
 
-    // 1) Login endpoint
-    if (path === "/api/login" && req.method === "POST") {
-        const token = await issueJwt("guest");
-        return Response.json({ token }, { headers: corsHeaders });
-    }
+    const url = new URL(req.url)
+    const path = url.pathname
 
-    // 2) Get highscores
-    if (path === "/api/highscores" && req.method === "GET") {
-        const stored = await kv.get<unknown[]>(["highscores"]);
-        return Response.json(stored.value ?? [], { headers: corsHeaders });
-    }
-
-    // 3) Save highscores (protected)
-    if (path === "/api/highscores" && req.method === "POST") {
-        const authHeader = req.headers.get("Authorization") || "";
-        const token = authHeader.replace(/^Bearer\s+/, "");
-        try {
-            await verify(token, ADMIN_TOKEN!, "HS256");
-        } catch {
-            return Response.json({ error: "Unauthorized" }, {
-                status: 401,
-                headers: corsHeaders
-            });
+    if (path === "/api/highscores") {
+        if (req.method === "GET") {
+            const highScores = await getHighScores()
+            return new Response(JSON.stringify(highScores), {
+                headers: {
+                    ...corsHeaders,
+                    "Content-Type": "application/json",
+                },
+            })
+        } else if (req.method === "POST") {
+            try {
+                const highScores = (await req.json()) as HighScore[]
+                await saveHighScores(highScores)
+                return new Response(JSON.stringify({success: true}), {
+                    headers: {
+                        ...corsHeaders,
+                        "Content-Type": "application/json",
+                    },
+                })
+            } catch (error) {
+                return new Response(JSON.stringify({error: "Failed to save high scores"}), {
+                    status: 400,
+                    headers: {
+                        ...corsHeaders,
+                        "Content-Type": "application/json",
+                    },
+                })
+            }
         }
-
-        let data: unknown[];
-        try {
-            data = await req.json();
-        } catch {
-            return Response.json({ error: "Invalid JSON" }, {
-                status: 400,
-                headers: corsHeaders
-            });
-        }
-
-        data.sort((a: any, b: any) => b.score - a.score);
-        await kv.set(["highscores"], data.slice(0, 10));
-        return Response.json({ success: true }, { headers: corsHeaders });
     }
 
-    // 4) Static files handling
     try {
-        console.log("7757");
-        const baseDir = Deno.cwd();
-        console.log(baseDir);
-        let filePath = decodeURIComponent(url.pathname);
-
-        console.log(`[Request] Path: ${filePath}`); // Логирование
-
-        if (filePath === "/") filePath = "/index.html";
-
-        const fullPath = `${baseDir}/public${filePath}`;
-        console.log(`[File System] Looking for: ${fullPath}`); // Логирование
-
-        if (!fullPath.startsWith(baseDir + "/public/")) {
-            console.error(`[Security] Path traversal attempt: ${fullPath}`);
-            return new Response("Forbidden", { status: 403 });
-        }
-
-        const fileInfo = await Deno.stat(fullPath);
-        console.log(`[File Info] ${JSON.stringify(fileInfo)}`); // Логирование
-
-        const file = await Deno.readFile(fullPath);
-        const ext = filePath.split('.').pop()?.toLowerCase() || '';
-        const mimeMap: Record<string, string> = {
-            "html": "text/html",
-            "js": "application/javascript",
-            "css": "text/css",
-            "json": "application/json",
-            "png": "image/png",
-            "jpg": "image/jpeg",
-            "jpeg": "image/jpeg",
-            "gif": "image/gif",
-            "svg": "image/svg+xml",
-            "ico": "image/x-icon",
-            "txt": "text/plain"
-        };
+        const filePath = path === "/" ? "/index.html" : path
+        const file = await Deno.readFile(`.${filePath}`)
+        const contentType = getContentType(filePath)
 
         return new Response(file, {
             headers: {
                 ...corsHeaders,
-                "Content-Type": mimeMap[ext] || "application/octet-stream"
-            }
-        });
+                "Content-Type": contentType,
+            },
+        })
     } catch (error) {
-        console.error(`[Error] ${error}`);
         if (error instanceof Deno.errors.NotFound) {
-            return new Response("Not Found", { status: 404, headers: corsHeaders });
+            return new Response("Not Found", {status: 404, headers: corsHeaders})
         }
-        return new Response("Internal Server Error", { status: 500, headers: corsHeaders });
+
+        return new Response("Internal Server Error", {
+            status: 500,
+            headers: corsHeaders,
+        })
     }
-});
+})
+
+async function getHighScores(): Promise<HighScore[]> {
+    const result = await kv.get<HighScore[]>(["highscores"])
+    return result.value || []
+}
+
+async function saveHighScores(highScores: HighScore[]): Promise<void> {
+    highScores.sort((a, b) => b.score - a.score)
+    const topScores = highScores.slice(0, 10)
+    await kv.set(["highscores"], topScores)
+}
+
+function getContentType(path: string): string {
+    const extension = path.split(".").pop()?.toLowerCase() || ""
+
+    const contentTypes: Record<string, string> = {
+        html: "text/html",
+        css: "text/css",
+        js: "text/javascript",
+        json: "application/json",
+        png: "image/png",
+        jpg: "image/jpeg",
+        jpeg: "image/jpeg",
+        gif: "image/gif",
+        svg: "image/svg+xml",
+        ico: "image/x-icon",
+    }
+
+    return contentTypes[extension] || "text/plain"
+}
