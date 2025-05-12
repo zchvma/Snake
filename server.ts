@@ -41,6 +41,8 @@ serve(async (req: Request): Promise<Response> => {
                 return new Response("Access denied", { status: 403 });
             }
 
+            console.log(origin)
+
             try {
                 const highScores = (await req.json()) as HighScore[]
                 await saveHighScores(highScores)
