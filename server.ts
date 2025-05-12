@@ -1,115 +1,125 @@
-import {serve} from "https://deno.land/std@0.177.0/http/server.ts"
-import {corsHeaders} from "./cors.ts"
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
+import { corsHeaders } from "./cors.ts";
 
-// kv storage
-const kv = await Deno.openKv()
+// KV storage
+const kv = await Deno.openKv();
 
 interface HighScore {
-    name: string
-    score: number
-    level: number
-    date: number
+    name: string;
+    score: number;
+    level: number;
+    date: number;
+}
+
+interface AllowedToken {
+    valid: true;
+}
+
+// Helpers
+async function getHighScores(): Promise<HighScore[]> {
+    const result = await kv.get<HighScore[]>(["highscores"]);
+    return result.value || [];
+}
+
+async function saveHighScores(highScores: HighScore[]): Promise<void> {
+    highScores.sort((a, b) => b.score - a.score);
+    const top = highScores.slice(0, 10);
+    await kv.set(["highscores"], top);
 }
 
 serve(async (req: Request): Promise<Response> => {
-    if (req.method === "OPTIONS") {
-        return new Response(null, {
-            headers: corsHeaders,
-        })
+    const { method, headers, url } = req;
+    const u = new URL(url);
+
+    // Preflight
+    if (method === "OPTIONS") {
+        return new Response(null, { headers: corsHeaders });
     }
 
-    const url = new URL(req.url)
-    const path = url.pathname
+    if (u.pathname === "/api/highscores") {
+        // POST: save scores + issue token
+        if (method === "POST") {
+            try {
+                const scores = (await req.json()) as HighScore[];
+                await saveHighScores(scores);
 
-    if (path === "/api/highscores") {
-        if (req.method === "GET") {
-            const origin = req.headers.get("referer");
-            if (origin != "https://zva-snake-game.deno.dev/") {
-                return new Response("Access Denied", { status: 403 });
+                // Generate and store token
+                const token = crypto.randomUUID();
+                await kv.set(["allowedTokens", token], { valid: true } as AllowedToken);
+
+                // Set cookie
+                const cookie = [
+                    `hs_token=${token}`,
+                    `HttpOnly`,            // JS cannot read
+                    `Secure`,              // HTTPS only
+                    `SameSite=Strict`,     // no cross-site
+                    `Path=/`,
+                    `Max-Age=${60 * 60 * 24 * 365}` // 1 year
+                ].join("; ");
+
+                const respHeaders = new Headers({
+                    ...corsHeaders,
+                    "Content-Type": "application/json",
+                    "Set-Cookie": cookie,
+                });
+
+                return new Response(JSON.stringify({ success: true }), { headers: respHeaders });
+            } catch (e) {
+                const respHeaders = new Headers({
+                    ...corsHeaders,
+                    "Content-Type": "application/json",
+                });
+
+                return new Response(
+                    JSON.stringify({ error: "Failed to save high scores" }),
+                    { status: 400, headers: respHeaders }
+                );
             }
-            const highScores = await getHighScores()
+        }
+
+        // GET: return scores if token valid
+        if (method === "GET") {
+            const cookieHeader = headers.get("cookie") || "";
+            const match = cookieHeader.match(/(?:^|;\s*)hs_token=([^;]+)/);
+            const token = match ? match[1] : null;
+            if (!token) {
+                return new Response("Forbidden", { status: 403, headers: corsHeaders });
+            }
+
+            const entry = await kv.get<AllowedToken>(["allowedTokens", token]);
+            if (!entry.value?.valid) {
+                return new Response("Forbidden", { status: 403, headers: corsHeaders });
+            }
+
+            const highScores = await getHighScores();
             return new Response(JSON.stringify(highScores), {
                 headers: {
                     ...corsHeaders,
                     "Content-Type": "application/json",
                 },
-            })
-        } else if (req.method === "POST") {
-            const origin = req.headers.get("origin");
-            if (origin != "https://zva-snake-game.deno.dev") {
-                return new Response("Access Denied", { status: 403 });
-            }
-
-            try {
-                const highScores = (await req.json()) as HighScore[]
-                await saveHighScores(highScores)
-                return new Response(JSON.stringify({success: true}), {
-                    headers: {
-                        ...corsHeaders,
-                        "Content-Type": "application/json",
-                    },
-                })
-            } catch (error) {
-                return new Response(JSON.stringify({error: "Failed to save high scores"}), {
-                    status: 400,
-                    headers: {
-                        ...corsHeaders,
-                        "Content-Type": "application/json",
-                    },
-                })
-            }
+            });
         }
     }
 
+    // Static files & fallback
     try {
-        const filePath = path === "/" ? "/index.html" : path
-        const file = await Deno.readFile(`.${filePath}`)
-        const contentType = getContentType(filePath)
-
-        return new Response(file, {
-            headers: {
-                ...corsHeaders,
-                "Content-Type": contentType,
-            },
-        })
-    } catch (error) {
-        if (error instanceof Deno.errors.NotFound) {
-            return new Response("Not Found", {status: 404, headers: corsHeaders})
+        const path = u.pathname === "/" ? "/index.html" : u.pathname;
+        const file = await Deno.readFile(`.${path}`);
+        const contentType = getContentType(path);
+        return new Response(file, { headers: { ...corsHeaders, "Content-Type": contentType } });
+    } catch (err) {
+        if (err instanceof Deno.errors.NotFound) {
+            return new Response("Not Found", { status: 404, headers: corsHeaders });
         }
-
-        return new Response("Internal Server Error", {
-            status: 500,
-            headers: corsHeaders,
-        })
+        return new Response("Internal Server Error", { status: 500, headers: corsHeaders });
     }
-})
-
-async function getHighScores(): Promise<HighScore[]> {
-    const result = await kv.get<HighScore[]>(["highscores"])
-    return result.value || []
-}
-
-async function saveHighScores(highScores: HighScore[]): Promise<void> {
-    highScores.sort((a, b) => b.score - a.score)
-    const topScores = highScores.slice(0, 10)
-    await kv.set(["highscores"], topScores)
-}
+});
 
 function getContentType(path: string): string {
-    const extension = path.split(".").pop()?.toLowerCase() || ""
-
-    const contentTypes: Record<string, string> = {
-        html: "text/html",
-        css: "text/css",
-        js: "text/javascript",
-        json: "application/json",
-        png: "image/png",
-        jpg: "image/jpeg",
-        jpeg: "image/jpeg",
-        gif: "image/gif",
-        svg: "image/svg+xml",
-        ico: "image/x-icon",
-    }
-
-    return contentTypes[extension] || "text/plain"
+    const ext = path.split('.').pop()?.toLowerCase() || '';
+    const map: Record<string,string> = {
+        html: 'text/html', css: 'text/css', js: 'application/javascript', json: 'application/json',
+        png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', svg: 'image/svg+xml', ico: 'image/x-icon'
+    };
+    return map[ext] || 'application/octet-stream';
 }

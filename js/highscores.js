@@ -2,44 +2,39 @@ import {MAX_HIGH_SCORES} from "./config.js"
 
 async function loadHighScores() {
     try {
-        try {
-            // Запрос к api для получения рекордов
-            const response = await fetch("/api/highscores")
-            if (response.ok) {
-                return await response.json()
-            }
-        } catch (error) {
-            console.warn("Could not fetch high scores from server", error)
+        const response = await fetch("/api/highscores", {
+            method: "GET",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" }
+        });
+        if (response.ok) {
+            return await response.json();
         }
-
-        // Если не удалось загрузить с сервера, возвращаем пустой массив
-        return []
-    } catch (error) {
-        console.error("Error loading high scores:", error)
-        return []
+        if (response.status === 403) {
+            console.warn("Access denied: no valid token");
+            return [];
+        }
+    } catch (e) {
+        console.warn("Could not fetch high scores from server", e);
     }
+    return [];
 }
 
 async function saveHighScores(highScores) {
+    if (!Array.isArray(highScores)) return;
+
     try {
-        if (!Array.isArray(highScores)) {
-            console.error("highScores is not an array in saveHighScores:", highScores)
-            return
+        const response = await fetch("/api/highscores", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(highScores)
+        });
+        if (!response.ok) {
+            console.warn("Save failed with status", response.status);
         }
-        try {
-            // Запрос к api для сохранения рекордов
-            await fetch("/api/highscores", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(highScores),
-            })
-        } catch (error) {
-            console.warn("Could not save high scores to server", error)
-        }
-    } catch (error) {
-        console.error("Error saving high scores:", error)
+    } catch (e) {
+        console.warn("Could not save high scores to server", e);
     }
 }
 
