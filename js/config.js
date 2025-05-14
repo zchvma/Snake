@@ -10,8 +10,8 @@ const MAX_SPEED = 50
 const MIN_SPEED = 300
 
 // Количество очков, необходимое для прохода на следующий уровень
-const POINTS_PER_LEVEL = 30
-const POINTS_PER_REGENERATE = POINTS_PER_LEVEL * 3
+const POINTS_PER_LEVEL = 20
+const POINTS_PER_REGENERATE = POINTS_PER_LEVEL * 1.5
 
 // Безопасное расстояние для змейки при генерации
 const SAFE_DISTANCE = 5
