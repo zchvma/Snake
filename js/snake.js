@@ -137,7 +137,7 @@ function moveSnake(gameState) {
       if (gameState.scoreCounter % POINTS_PER_REGENERATE === 0) {
         regenerateWalls(gameState)
         generatePortals(gameState, 4)
-        generatePoisonZones(gameState, 4)
+        generatePoisonZones(gameState, 6)
       }
     } else {
       snake.pop()
