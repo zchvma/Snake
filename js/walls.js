@@ -74,7 +74,7 @@ function destroyNearbyWalls(gameState) {
     if (snake.length === 0) return
 
     const head = snake[0]
-    const radius = 20
+    const radius = 15
 
     // Разрушение стен
     walls.forEach((wall) => {

@@ -5,8 +5,8 @@ const VISIBLE_GRID = { width: 10, height: 10 }
 const MAX_GRID = { width: 50, height: 50 }
 
 // Скорость змейки
-const INITIAL_SPEED = 200
-const MAX_SPEED = 50
+const INITIAL_SPEED = 150
+const MAX_SPEED = 20
 const MIN_SPEED = 300
 
 // Количество очков, необходимое для прохода на следующий уровень
@@ -31,7 +31,7 @@ const MAX_HIGH_SCORES = 10 // Максимальное количество за
 const HIGH_SCORES_KEY = "snakeHighScores" // Ключ для localStorage
 
 // Длительность бонусов
-const SPEED_UP_BONUS_DURATION_TIME = 5000 // 5 секунд
+const SPEED_UP_BONUS_DURATION_TIME = 20000 // 5 секунд
 const SPEED_DOWN_BONUS_DURATION_TIME = 5000 // 5 секунд
 const BONUS_DURATION = 5000 // 5 секунд
 

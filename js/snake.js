@@ -122,7 +122,9 @@ function moveSnake(gameState) {
         levelUp(gameState)
       }
 
-      generateFood(gameState)
+      for (let i = 0; i < 6; i++) {
+        generateFood(gameState)
+      }
 
       if (gameState.bonuses.length < 10) {
         generateBonus(gameState)
