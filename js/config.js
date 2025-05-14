@@ -23,6 +23,7 @@ const EXPANSION_THRESHOLD = 5
 const MAX_PORTAL_PAIRS = 3
 
 // Максимальное количество стен
+const MIN_WALLS = 15
 const MAX_WALLS = 100
 
 // Константы для таблицы лучших результатов
@@ -65,5 +66,6 @@ export {
   BONUS_DURATION,
   THEMES,
   WALL_GENERATE_GROW_RATE,
+  MIN_WALLS,
   MAX_WALLS
 }

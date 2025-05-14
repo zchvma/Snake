@@ -1,4 +1,4 @@
-import {INITIAL_SPEED, WALL_GENERATE_GROW_RATE} from "./config.js"
+import {INITIAL_SPEED, MIN_WALLS, WALL_GENERATE_GROW_RATE} from "./config.js"
 import * as highscores from "./highscores.js"
 import * as board from "./board.js"
 import {updateMinimap} from "./minimap.js"
@@ -46,7 +46,7 @@ function initializeGame(GameState) {
             {row: safePosition.row, col: safePosition.col - 2},
         ]
 
-        generateWalls(GameState, 2 + Math.ceil(WALL_GENERATE_GROW_RATE * GameState.levelCounter))
+        generateWalls(GameState, MIN_WALLS + Math.ceil(WALL_GENERATE_GROW_RATE * GameState.levelCounter))
         generatePortals(GameState, 4)
         generatePoisonZones(GameState, 2)
 
