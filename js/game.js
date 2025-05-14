@@ -48,7 +48,7 @@ function initializeGame(GameState) {
 
         generateWalls(GameState, MIN_WALLS + Math.ceil(WALL_GENERATE_GROW_RATE * GameState.levelCounter))
         generatePortals(GameState, 4)
-        generatePoisonZones(GameState, 2)
+        generatePoisonZones(GameState, 4)
 
         GameState.activeBonusEffects = {
             speedUp: {active: false, endTime: 0},
